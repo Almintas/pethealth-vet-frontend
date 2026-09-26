@@ -1,6 +1,8 @@
 import type { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { changeAppLanguage, type AppLanguage } from '../i18n';
+import { changeAppLanguage } from '../i18n';
+import { APP_LANGUAGE_OPTIONS, resolveAppLanguage } from '../i18n/language-options';
+import type { AppLanguage } from '../i18n';
 import './language-selector.css';
 
 type LanguageSelectorProps = {
@@ -8,17 +10,12 @@ type LanguageSelectorProps = {
   className?: string;
 };
 
-const LANGUAGES: { value: AppLanguage; labelKey: 'common.languageEnglish' | 'common.languageLithuanian' }[] = [
-  { value: 'en', labelKey: 'common.languageEnglish' },
-  { value: 'lt', labelKey: 'common.languageLithuanian' },
-];
-
 export function LanguageSelector({
   variant = 'compact',
   className = '',
 }: LanguageSelectorProps) {
   const { t, i18n } = useTranslation();
-  const current = i18n.language === 'lt' ? 'lt' : 'en';
+  const current = resolveAppLanguage(i18n.language);
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const next = event.target.value as AppLanguage;
@@ -34,7 +31,7 @@ export function LanguageSelector({
         onChange={handleChange}
         aria-label={t('common.selectLanguage')}
       >
-        {LANGUAGES.map((option) => (
+        {APP_LANGUAGE_OPTIONS.map((option) => (
           <option key={option.value} value={option.value}>
             {t(option.labelKey)}
           </option>
@@ -53,7 +50,7 @@ export function LanguageSelector({
         onChange={handleChange}
         aria-label={t('common.selectLanguage')}
       >
-        {LANGUAGES.map((option) => (
+        {APP_LANGUAGE_OPTIONS.map((option) => (
           <option key={option.value} value={option.value}>
             {t(option.labelKey)}
           </option>

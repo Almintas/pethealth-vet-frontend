@@ -1,9 +1,11 @@
+import type { ReactNode } from 'react';
 import { Link } from 'react-router';
 import './feedback.css';
 
 type EmptyStateProps = {
   title: string;
   description?: string;
+  icon?: ReactNode;
   actionLabel?: string;
   onAction?: () => void;
   actionHref?: string;
@@ -13,6 +15,7 @@ type EmptyStateProps = {
 export function EmptyState({
   title,
   description,
+  icon,
   actionLabel,
   onAction,
   actionHref,
@@ -39,6 +42,7 @@ export function EmptyState({
         .filter(Boolean)
         .join(' ')}
     >
+      {icon ? <div className="ph-empty-state__icon-wrap">{icon}</div> : null}
       <h3 className="ph-empty-state__title">{title}</h3>
       {description ? (
         <p className="ph-empty-state__description">{description}</p>

@@ -2,27 +2,28 @@ import { useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink, Outlet, useNavigate } from 'react-router';
 import { BrandMark } from '../components/BrandMark';
-import { LanguageSelector } from '../components/LanguageSelector';
 import { useAuth } from '../features/auth';
 import { SidebarUserMenu } from './SidebarUserMenu';
-import '../components/language-selector.css';
 import './authenticated-layout.css';
 
+type NavigationLabelKey =
+  | 'navigation.dashboard'
+  | 'navigation.patients'
+  | 'navigation.appointments'
+  | 'navigation.myClinic';
+
 type NavItem =
+  | { kind: 'divider' }
   | {
       kind: 'link';
       to: string;
-      labelKey:
-        | 'navigation.dashboard'
-        | 'navigation.clinics'
-        | 'navigation.profile'
-        | 'navigation.settings';
+      labelKey: NavigationLabelKey;
       end?: boolean;
       icon: ReactNode;
     }
   | {
       kind: 'placeholder';
-      labelKey: 'navigation.patients' | 'navigation.appointments';
+      labelKey: NavigationLabelKey;
       icon: ReactNode;
     };
 
@@ -40,18 +41,7 @@ const navItems: NavItem[] = [
   },
   {
     kind: 'link',
-    to: '/clinics',
-    labelKey: 'navigation.clinics',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M3 21h18" />
-        <path d="M5 21V7l7-4 7 4v14" />
-        <path d="M9 21v-6h6v6" />
-      </svg>
-    ),
-  },
-  {
-    kind: 'placeholder',
+    to: '/patients',
     labelKey: 'navigation.patients',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -61,7 +51,8 @@ const navItems: NavItem[] = [
     ),
   },
   {
-    kind: 'placeholder',
+    kind: 'link',
+    to: '/appointments',
     labelKey: 'navigation.appointments',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -70,27 +61,16 @@ const navItems: NavItem[] = [
       </svg>
     ),
   },
+  { kind: 'divider' },
   {
     kind: 'link',
-    to: '/profile',
-    labelKey: 'navigation.profile',
+    to: '/clinics',
+    labelKey: 'navigation.myClinic',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M20 21a8 8 0 0 0-16 0" />
-        <circle cx="12" cy="8" r="4" />
-      </svg>
-    ),
-  },
-  {
-    kind: 'link',
-    to: '/settings',
-    labelKey: 'navigation.settings',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <circle cx="12" cy="12" r="3" />
-        <path
-          d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32 1.41-1.41"
-        />
+        <path d="M3 21h18" />
+        <path d="M5 21V7l7-4 7 4v14" />
+        <path d="M9 21v-6h6v6" />
       </svg>
     ),
   },
@@ -150,7 +130,16 @@ export function AuthenticatedLayout() {
         </div>
 
         <nav className="authenticated-layout__nav" aria-label={t('common.mainNav')}>
-          {navItems.map((item) => {
+          {navItems.map((item, index) => {
+            if (item.kind === 'divider') {
+              return (
+                <hr
+                  key={`nav-divider-${index}`}
+                  className="authenticated-layout__nav-divider"
+                />
+              );
+            }
+
             if (item.kind === 'placeholder') {
               return (
                 <span
@@ -162,11 +151,13 @@ export function AuthenticatedLayout() {
                   <span className="authenticated-layout__link-icon" aria-hidden="true">
                     {item.icon}
                   </span>
-                  <span className="authenticated-layout__link-label">
-                    {t(item.labelKey)}
-                  </span>
-                  <span className="authenticated-layout__soon-badge">
-                    {t('common.comingSoon')}
+                  <span className="authenticated-layout__link-body">
+                    <span className="authenticated-layout__link-label">
+                      {t(item.labelKey)}
+                    </span>
+                    <span className="authenticated-layout__soon-badge">
+                      {t('common.comingSoon')}
+                    </span>
                   </span>
                 </span>
               );
@@ -183,14 +174,17 @@ export function AuthenticatedLayout() {
                 <span className="authenticated-layout__link-icon" aria-hidden="true">
                   {item.icon}
                 </span>
-                {t(item.labelKey)}
+                <span className="authenticated-layout__link-body">
+                  <span className="authenticated-layout__link-label">
+                    {t(item.labelKey)}
+                  </span>
+                </span>
               </NavLink>
             );
           })}
         </nav>
 
         <div className="authenticated-layout__user">
-          <LanguageSelector />
           <SidebarUserMenu
             user={user}
             isLoggingOut={isLoggingOut}

@@ -58,6 +58,7 @@
 }
 
 .ph-field__input,
+.ph-field__select,
 .ph-field__textarea {
   width: 100%;
   min-height: var(--ph-control-height);
@@ -68,12 +69,21 @@
   color: var(--ph-color-text);
 }
 
+.ph-field__select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.65rem center;
+  padding-right: 2.25rem;
+}
+
 .ph-field__textarea {
   min-height: 5.5rem;
   resize: vertical;
 }
 
 .ph-field__input:focus,
+.ph-field__select:focus,
 .ph-field__textarea:focus {
   outline: none;
   border-color: var(--ph-color-primary);

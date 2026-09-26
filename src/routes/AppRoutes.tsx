@@ -2,7 +2,12 @@ import { Navigate, Route, Routes } from 'react-router';
 import { LoginPage } from '../features/auth/pages/LoginPage';
 import { RegisterPage } from '../features/auth/pages/RegisterPage';
 import { ClinicsPage } from '../features/clinics/pages/ClinicsPage';
+import { AppointmentsPage } from '../features/appointments/pages/AppointmentsPage';
 import { DashboardPage } from '../features/dashboard/pages/DashboardPage';
+import { PatientMedicalHistoryPage } from '../features/medical-records/pages/PatientMedicalHistoryPage';
+import { PatientMedicationsPage } from '../features/medications/pages/PatientMedicationsPage';
+import { PatientProfilePage } from '../features/patients/pages/PatientProfilePage';
+import { PatientsPage } from '../features/patients/pages/PatientsPage';
 import { ProfilePage } from '../features/profile/pages/ProfilePage';
 import { SettingsPage } from '../features/settings/pages/SettingsPage';
 import { AuthenticatedLayout } from '../layouts/AuthenticatedLayout';
@@ -38,6 +43,17 @@ export function AppRoutes() {
       <Route element={<ProtectedRoute />}>
         <Route element={<AuthenticatedLayout />}>
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/patients" element={<PatientsPage />} />
+          <Route path="/patients/:id" element={<PatientProfilePage />} />
+          <Route
+            path="/patients/:id/medical-history"
+            element={<PatientMedicalHistoryPage />}
+          />
+          <Route
+            path="/patients/:id/medications"
+            element={<PatientMedicationsPage />}
+          />
+          <Route path="/appointments" element={<AppointmentsPage />} />
           <Route path="/clinics" element={<ClinicsPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/settings" element={<SettingsPage />} />

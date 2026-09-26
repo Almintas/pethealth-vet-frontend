@@ -123,6 +123,18 @@
   padding: var(--ph-space-5);
 }
 
+.ph-empty-state__icon-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--ph-space-3);
+}
+
+.ph-empty-state__icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  opacity: 0.85;
+}
+
 .ph-empty-state__title {
   margin: 0 0 var(--ph-space-2);
   font-size: 1rem;

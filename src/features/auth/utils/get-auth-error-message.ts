@@ -6,6 +6,10 @@ export type UserErrorContext =
   | 'load-clinics'
   | 'save-clinic'
   | 'load-profile'
+  | 'load-medical-records'
+  | 'save-medical-record'
+  | 'load-medications'
+  | 'save-medication'
   | 'generic-load'
   | 'generic-save';
 
@@ -71,11 +75,32 @@ function mapKnownBackendMessage(message: string): string | null {
   ) {
     return i18n.t('errors.invalidCredentials');
   }
+  if (
+    normalized.includes('already associated with another account') ||
+    normalized.includes('email is already associated')
+  ) {
+    return i18n.t('patients.validation.ownerEmailInUse');
+  }
   if (normalized.includes('already exists') || normalized.includes('duplicate')) {
     return i18n.t('errors.emailAlreadyRegistered');
   }
+  if (normalized.includes('invalid email address')) {
+    return i18n.t('patients.validation.ownerEmailInvalid');
+  }
   if (normalized.includes('not found')) {
     return i18n.t('errors.notFound');
+  }
+  if (
+    normalized === 'bad request exception' ||
+    normalized.includes('bad request')
+  ) {
+    return i18n.t('errors.badRequest');
+  }
+  if (
+    normalized.includes('owner system integration') ||
+    normalized.includes('owner system')
+  ) {
+    return i18n.t('errors.ownerIntegration');
   }
   return null;
 }

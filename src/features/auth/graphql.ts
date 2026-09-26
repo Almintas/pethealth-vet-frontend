@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const VETERINARIAN_PROFILE_FIELDS = gql`
-  fragment VeterinarianProfileFields on VeterinarianProfileModel {
+  fragment VeterinarianProfileFields on VeterinarianProfile {
     id
     firstName
     lastName
@@ -10,7 +10,7 @@ export const VETERINARIAN_PROFILE_FIELDS = gql`
 `;
 
 export const AUTH_USER_FIELDS = gql`
-  fragment AuthUserFields on UserModel {
+  fragment AuthUserFields on User {
     id
     email
     role
@@ -36,7 +36,10 @@ export const LOGIN_MUTATION = gql`
 export const REGISTER_VETERINARIAN_MUTATION = gql`
   mutation RegisterVeterinarian($input: RegisterVeterinarianInput!) {
     registerVeterinarian(input: $input) {
-      ...AuthUserFields
+      accessToken
+      user {
+        ...AuthUserFields
+      }
     }
   }
   ${AUTH_USER_FIELDS}

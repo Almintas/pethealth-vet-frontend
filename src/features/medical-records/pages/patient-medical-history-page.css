@@ -1,0 +1,148 @@
+.medical-history-page {
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+.medical-history-page__header {
+  margin-bottom: var(--ph-space-4);
+}
+
+.medical-history-page__eyebrow {
+  margin: 0 0 var(--ph-space-2);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ph-color-primary);
+}
+
+.medical-history-page__title {
+  margin: 0 0 var(--ph-space-1);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.medical-history-page__subtitle {
+  margin: 0 0 var(--ph-space-2);
+  color: var(--ph-color-text-secondary);
+}
+
+.medical-history-page__count {
+  margin: 0;
+  font-weight: 600;
+}
+
+.medical-history-page__context {
+  margin: var(--ph-space-2) 0 0;
+  font-size: 0.875rem;
+  color: var(--ph-color-text-secondary);
+}
+
+.medical-history-page__filters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ph-space-4);
+  margin-bottom: var(--ph-space-4);
+}
+
+.medical-history-page__filter-row {
+  display: grid;
+  gap: var(--ph-space-3);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 40rem) {
+  .medical-history-page__filter-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.medical-history-page__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ph-space-4);
+}
+
+.medical-history-page__empty {
+  margin-bottom: var(--ph-space-4);
+}
+
+.medical-history-page__add {
+  margin-top: var(--ph-space-4);
+}
+
+.medical-history-pagination {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ph-space-3);
+  padding-top: var(--ph-space-2);
+}
+
+.medical-history-pagination__summary {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--ph-color-text-secondary);
+}
+
+.medical-history-pagination__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ph-space-2);
+}
+
+.medical-history-pagination__pages {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ph-space-1);
+}
+
+.medical-history-pagination__page {
+  min-width: 2.25rem;
+  min-height: 2.25rem;
+  padding: 0 0.5rem;
+  border: 1px solid var(--ph-color-border);
+  border-radius: var(--ph-radius-md);
+  background: var(--ph-color-surface);
+  color: var(--ph-color-text);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.medical-history-pagination__page--active {
+  border-color: var(--ph-color-primary);
+  background: var(--ph-color-primary);
+  color: var(--ph-color-on-primary, #fff);
+}
+
+.medical-history-pagination__ellipsis {
+  padding: 0 0.25rem;
+  color: var(--ph-color-text-muted);
+}
+
+.medical-history__view-all-link {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ph-color-primary);
+  text-decoration: none;
+}
+
+.medical-history__view-all-link:hover {
+  text-decoration: underline;
+}
+
+.medical-history__view-all-count {
+  display: inline-flex;
+  margin-top: var(--ph-space-3);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ph-color-primary);
+  text-decoration: none;
+}
+
+.medical-history__view-all-count:hover {
+  text-decoration: underline;
+}

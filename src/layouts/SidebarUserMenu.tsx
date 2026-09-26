@@ -6,6 +6,7 @@ import {
   getVeterinarianInitials,
   type AuthUser,
 } from '../features/auth';
+import { AccountMenuLanguageGroup } from './AccountMenuLanguageGroup';
 
 type SidebarUserMenuProps = {
   user: AuthUser | null;
@@ -159,6 +160,8 @@ export function SidebarUserMenu({
             </span>
             {t('navigation.settings')}
           </button>
+          <div className="sidebar-user-menu__separator" role="separator" />
+          <AccountMenuLanguageGroup onLanguageSelected={closeMenu} />
           <div className="sidebar-user-menu__separator" role="separator" />
           <button
             type="button"

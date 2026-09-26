@@ -1,108 +1,91 @@
 import { useQuery } from '@apollo/client/react';
-import { useState } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router';
-import { ErrorAlert } from '../../../components/feedback/ErrorAlert';
-import { LoadingState } from '../../../components/feedback/LoadingState';
+import { EmptyState } from '../../../components/feedback/EmptyState';
+import { MY_APPOINTMENTS_QUERY } from '../../appointments/graphql';
+import type { MyAppointmentsQueryResult } from '../../appointments/types';
+import { mapAppointmentsToDashboard } from '../../appointments/utils/map-to-dashboard';
 import { useAuth, getVeterinarianFirstName } from '../../auth';
-import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
-import { ClinicCard } from '../../clinics/components/ClinicCard';
-import { ClinicDialog, type ClinicFormValues } from '../../clinics/components/ClinicDialog';
-import { MY_CLINICS_QUERY } from '../../clinics/graphql';
-import { useCreateClinic } from '../../clinics/hooks/useCreateClinic';
-import type { MyClinicsQueryResult } from '../../clinics/types';
-import '../../clinics/components/clinic-card.css';
-import '../../clinics/components/clinic-dialog.css';
+import {
+  DashboardAppointmentList,
+} from '../components/DashboardAppointmentList';
+import { DashboardQuickActions } from '../components/DashboardQuickActions';
+import { DashboardSection } from '../components/DashboardSection';
+import '../dashboard.css';
 
 export function DashboardPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user } = useAuth();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [dialogInstance, setDialogInstance] = useState(0);
+  const firstName = getVeterinarianFirstName(user) || t('common.account');
 
-  const openCreateDialog = () => {
-    setDialogInstance((value) => value + 1);
-    setIsDialogOpen(true);
-  };
-  const { createClinic, loading: isCreating } = useCreateClinic();
-  const { data, loading, error, refetch } = useQuery<MyClinicsQueryResult>(
-    MY_CLINICS_QUERY,
-    { fetchPolicy: 'cache-and-network' },
+  const { data } = useQuery<MyAppointmentsQueryResult>(MY_APPOINTMENTS_QUERY, {
+    fetchPolicy: 'cache-and-network',
+  });
+
+  const { today: todayAppointments, upcoming: upcomingAppointments } = useMemo(
+    () => mapAppointmentsToDashboard(data?.myAppointments ?? [], i18n.language),
+    [data?.myAppointments, i18n.language],
   );
-
-  const firstName = getVeterinarianFirstName(user);
-  const clinics = data?.myClinics ?? [];
-
-  const handleCreate = async (values: ClinicFormValues) => {
-    await createClinic(values);
-    setIsDialogOpen(false);
-  };
+  const recentPatients: unknown[] = [];
 
   return (
-    <div className="ph-page">
+    <div className="ph-page dashboard">
       <header className="ph-page-header">
         <div>
           <p className="ph-page-header__eyebrow">{t('dashboard.eyebrow')}</p>
           <h1 className="ph-page-header__title">
-            {t('dashboard.welcome', {
-              name: firstName || t('common.account'),
-            })}
+            {t('dashboard.greeting', { name: firstName })}
           </h1>
           <p className="ph-page-header__subtitle">{t('dashboard.subtitle')}</p>
         </div>
       </header>
 
-      <section aria-labelledby="dashboard-clinics-title">
-        <div className="ph-section-header">
-          <h2 id="dashboard-clinics-title" className="ph-section-title">
-            {t('dashboard.yourClinics')}
-          </h2>
-          <Link className="ph-link-button" to="/clinics">
-            {t('dashboard.viewAllClinics')}
-          </Link>
+      <div className="dashboard__sections">
+        <DashboardSection
+          id="dashboard-today-title"
+          title={t('dashboard.todayAppointments')}
+          prominent
+        >
+          <DashboardAppointmentList
+            appointments={todayAppointments}
+            emptyTitle={t('dashboard.todayEmptyTitle')}
+            emptyDescription={t('dashboard.todayEmptyDescription')}
+          />
+        </DashboardSection>
+
+        <div className="dashboard__split">
+          <DashboardSection
+            id="dashboard-upcoming-title"
+            title={t('dashboard.upcomingAppointments')}
+          >
+            <DashboardAppointmentList
+              appointments={upcomingAppointments}
+              emptyTitle={t('dashboard.upcomingEmptyTitle')}
+              emptyDescription={t('dashboard.upcomingEmptyDescription')}
+            />
+          </DashboardSection>
+
+          <DashboardSection
+            id="dashboard-recent-patients-title"
+            title={t('dashboard.recentPatients')}
+          >
+            {recentPatients.length === 0 ? (
+              <EmptyState
+                section
+                title={t('dashboard.recentPatientsEmptyTitle')}
+                description={t('dashboard.recentPatientsEmptyDescription')}
+              />
+            ) : null}
+          </DashboardSection>
         </div>
 
-        {loading && clinics.length === 0 ? (
-          <LoadingState message={t('clinics.loading')} skeleton skeletonLines={3} />
-        ) : null}
-
-        {error ? (
-          <ErrorAlert
-            message={getAuthErrorMessage(error, 'load-clinics')}
-            onRetry={() => void refetch()}
-          />
-        ) : null}
-
-        {!loading && !error && clinics.length === 0 ? (
-          <div className="ph-empty-state">
-            <p>{t('dashboard.noClinics')}</p>
-            <button
-              type="button"
-              className="ph-button ph-button--primary"
-              onClick={openCreateDialog}
-            >
-              {t('clinics.createClinic')}
-            </button>
-          </div>
-        ) : null}
-
-        {clinics.length > 0 ? (
-          <div className="clinic-grid">
-            {clinics.slice(0, 3).map((membership) => (
-              <ClinicCard key={membership.id} membership={membership} />
-            ))}
-          </div>
-        ) : null}
-      </section>
-
-      <ClinicDialog
-        key={dialogInstance}
-        isOpen={isDialogOpen}
-        title={t('clinics.createClinic')}
-        isSubmitting={isCreating}
-        onClose={() => setIsDialogOpen(false)}
-        onSubmit={handleCreate}
-      />
+        <DashboardSection
+          id="dashboard-quick-actions-title"
+          title={t('dashboard.quickActions.title')}
+        >
+          <DashboardQuickActions />
+        </DashboardSection>
+      </div>
     </div>
   );
 }

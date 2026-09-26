@@ -1,57 +1,41 @@
 import { useQuery } from '@apollo/client/react';
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { EmptyState } from '../../../components/feedback/EmptyState';
 import { ErrorAlert } from '../../../components/feedback/ErrorAlert';
 import { LoadingState } from '../../../components/feedback/LoadingState';
+import { useAuth } from '../../auth';
 import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
-import { ClinicCard } from '../components/ClinicCard';
-import { ClinicDialog, type ClinicFormValues } from '../components/ClinicDialog';
+import { MyClinicInfoCard } from '../components/MyClinicInfoCard';
 import { MY_CLINICS_QUERY } from '../graphql';
-import { useCreateClinic } from '../hooks/useCreateClinic';
 import type { MyClinicsQueryResult } from '../types';
-import '../components/clinic-card.css';
-import '../components/clinic-dialog.css';
+import '../components/my-clinic-card.css';
 
 export function ClinicsPage() {
   const { t } = useTranslation();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [dialogInstance, setDialogInstance] = useState(0);
-
-  const openCreateDialog = () => {
-    setDialogInstance((value) => value + 1);
-    setIsDialogOpen(true);
-  };
-  const { createClinic, loading: isCreating } = useCreateClinic();
+  const { user } = useAuth();
   const { data, loading, error, refetch } = useQuery<MyClinicsQueryResult>(
     MY_CLINICS_QUERY,
     { fetchPolicy: 'cache-and-network' },
   );
 
   const clinics = data?.myClinics ?? [];
-
-  const handleCreate = async (values: ClinicFormValues) => {
-    await createClinic(values);
-    setIsDialogOpen(false);
-  };
+  const isInitialLoading = loading && clinics.length === 0;
+  const showEmptyState = !isInitialLoading && !error && clinics.length === 0;
+  const singleClinic = clinics.length === 1 ? clinics[0] : null;
 
   return (
     <div className="ph-page">
       <header className="ph-page-header">
         <div>
-          <p className="ph-page-header__eyebrow">{t('navigation.clinics')}</p>
-          <h1 className="ph-page-header__title">{t('clinics.title')}</h1>
-          <p className="ph-page-header__subtitle">{t('clinics.subtitle')}</p>
+          <p className="ph-page-header__eyebrow">{t('clinics.eyebrow')}</p>
+          <h1 className="ph-page-header__title">
+            {singleClinic ? singleClinic.name : t('clinics.pageTitle')}
+          </h1>
+          <p className="ph-page-header__subtitle">{t('clinics.workspaceDescription')}</p>
         </div>
-        <button
-          type="button"
-          className="ph-button ph-button--primary"
-          onClick={openCreateDialog}
-        >
-          {t('clinics.createClinic')}
-        </button>
       </header>
 
-      {loading && clinics.length === 0 ? (
+      {isInitialLoading ? (
         <LoadingState message={t('clinics.loading')} skeleton skeletonLines={4} />
       ) : null}
 
@@ -62,35 +46,27 @@ export function ClinicsPage() {
         />
       ) : null}
 
-      {!loading && !error && clinics.length === 0 ? (
-        <div className="ph-empty-state">
-          <p>{t('clinics.empty')}</p>
-          <button
-            type="button"
-            className="ph-button ph-button--primary"
-            onClick={openCreateDialog}
-          >
-            {t('clinics.createClinic')}
-          </button>
-        </div>
+      {showEmptyState ? (
+        <EmptyState
+          title={t('clinics.unassignedTitle')}
+          description={t('clinics.unassignedDescription')}
+        />
       ) : null}
 
-      {clinics.length > 0 ? (
-        <div className="clinic-grid">
-          {clinics.map((membership) => (
-            <ClinicCard key={membership.id} membership={membership} />
+      {clinics.length === 1 && singleClinic ? (
+        <MyClinicInfoCard clinic={singleClinic} user={user} />
+      ) : null}
+
+      {clinics.length > 1 ? (
+        <div className="my-clinic-list">
+          {clinics.map((clinic) => (
+            <section key={clinic.id}>
+              <h2 className="my-clinic-list__item-title">{clinic.name}</h2>
+              <MyClinicInfoCard clinic={clinic} user={user} />
+            </section>
           ))}
         </div>
       ) : null}
-
-      <ClinicDialog
-        key={dialogInstance}
-        isOpen={isDialogOpen}
-        title={t('clinics.createClinic')}
-        isSubmitting={isCreating}
-        onClose={() => setIsDialogOpen(false)}
-        onSubmit={handleCreate}
-      />
     </div>
   );
 }
