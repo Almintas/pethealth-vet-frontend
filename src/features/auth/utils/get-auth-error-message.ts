@@ -10,6 +10,8 @@ export type UserErrorContext =
   | 'save-medical-record'
   | 'load-medications'
   | 'save-medication'
+  | 'load-vaccinations'
+  | 'save-vaccination'
   | 'generic-load'
   | 'generic-save';
 

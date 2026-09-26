@@ -17,11 +17,20 @@ import {
 } from '../constants/appointment-types';
 import {
   CREATE_VET_APPOINTMENT_MUTATION,
-  MY_APPOINTMENTS_QUERY,
   UPDATE_VET_APPOINTMENT_MUTATION,
 } from '../graphql';
+import {
+  myAppointmentsRefetchList,
+  upsertMyAppointmentsCache,
+} from '../utils/my-appointments-cache';
+import {
+  datetimeLocalBoundsForScheduleDay,
+  datetimeLocalForScheduleDay,
+  selectedDayIsoDate,
+} from '../utils/schedule-day';
 import type {
   AppointmentStatus,
+  AppointmentsScheduleQueryInput,
   CreateVetAppointmentInput,
   UpdateVetAppointmentInput,
   VetAppointment,
@@ -33,6 +42,11 @@ type AppointmentFormDialogProps = {
   open: boolean;
   onClose: () => void;
   appointment?: VetAppointment;
+  defaultPetId?: string;
+  defaultScheduleDay?: Date;
+  scheduleDayLock?: Date;
+  scheduleQuery?: AppointmentsScheduleQueryInput;
+  onSaved?: () => void | Promise<void>;
 };
 
 type FormState = {
@@ -49,6 +63,8 @@ function buildInitialForm(
   mode: 'add' | 'edit',
   appointment?: VetAppointment,
   defaultClinicId = '',
+  defaultPetId = '',
+  defaultScheduleDay?: Date,
 ): FormState {
   if (mode === 'edit' && appointment) {
     return {
@@ -63,8 +79,10 @@ function buildInitialForm(
   }
   return {
     clinicId: defaultClinicId,
-    petId: '',
-    scheduledAt: '',
+    petId: defaultPetId,
+    scheduledAt: defaultScheduleDay
+      ? datetimeLocalForScheduleDay(defaultScheduleDay)
+      : '',
     type: DEFAULT_APPOINTMENT_TYPE,
     reason: '',
     notes: '',
@@ -77,6 +95,11 @@ export function AppointmentFormDialog({
   open,
   onClose,
   appointment,
+  defaultPetId,
+  defaultScheduleDay,
+  scheduleDayLock,
+  scheduleQuery,
+  onSaved,
 }: AppointmentFormDialogProps) {
   const { data: clinicsData } = useQuery<MyClinicsQueryResult>(MY_CLINICS_QUERY, {
     skip: !open,
@@ -88,7 +111,12 @@ export function AppointmentFormDialog({
     return null;
   }
 
-  const formKey = `${mode}-${appointment?.id ?? 'new'}-${defaultClinicId}`;
+  const formKey = [
+    mode,
+    appointment?.id ?? 'new',
+    defaultClinicId,
+    scheduleDayLock ? selectedDayIsoDate(scheduleDayLock) : 'any-day',
+  ].join('-');
 
   return (
     <AppointmentFormDialogContent
@@ -98,7 +126,16 @@ export function AppointmentFormDialog({
       appointment={appointment}
       clinics={clinics}
       defaultClinicId={defaultClinicId}
-      initialForm={buildInitialForm(mode, appointment, defaultClinicId)}
+      scheduleDayLock={scheduleDayLock}
+      scheduleQuery={scheduleQuery}
+      initialForm={buildInitialForm(
+        mode,
+        appointment,
+        defaultClinicId,
+        defaultPetId,
+        defaultScheduleDay,
+      )}
+      onSaved={onSaved}
     />
   );
 }
@@ -109,7 +146,10 @@ type ContentProps = {
   appointment?: VetAppointment;
   clinics: MyClinicsQueryResult['myClinics'];
   defaultClinicId: string;
+  scheduleDayLock?: Date;
+  scheduleQuery?: AppointmentsScheduleQueryInput;
   initialForm: FormState;
+  onSaved?: () => void | Promise<void>;
 };
 
 function AppointmentFormDialogContent({
@@ -118,6 +158,9 @@ function AppointmentFormDialogContent({
   appointment,
   clinics,
   initialForm,
+  scheduleDayLock,
+  scheduleQuery,
+  onSaved,
 }: ContentProps) {
   const { t } = useTranslation();
   const [form, setForm] = useState<FormState>(initialForm);
@@ -128,9 +171,7 @@ function AppointmentFormDialogContent({
   const [createAppointment, createState] = useMutation<
     { createVetAppointment: VetAppointment },
     { input: CreateVetAppointmentInput }
-  >(CREATE_VET_APPOINTMENT_MUTATION, {
-    refetchQueries: [{ query: MY_APPOINTMENTS_QUERY }],
-  });
+  >(CREATE_VET_APPOINTMENT_MUTATION);
 
   const [updateAppointment, updateState] = useMutation<
     { updateVetAppointment: VetAppointment },
@@ -139,12 +180,21 @@ function AppointmentFormDialogContent({
 
   const saving = createState.loading || updateState.loading;
   const error = createState.error ?? updateState.error;
+  const dateTimeBounds = scheduleDayLock
+    ? datetimeLocalBoundsForScheduleDay(scheduleDayLock)
+    : null;
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
+    const mutationOptions = {
+      refetchQueries: myAppointmentsRefetchList(scheduleQuery),
+      awaitRefetchQueries: true,
+    };
+
     try {
       if (mode === 'add') {
-        await createAppointment({
+        const result = await createAppointment({
+          ...mutationOptions,
           variables: {
             input: {
               clinicId: form.clinicId,
@@ -156,9 +206,19 @@ function AppointmentFormDialogContent({
               status: form.status,
             },
           },
+          update: (cache, { data }) => {
+            const created = data?.createVetAppointment;
+            if (created) {
+              upsertMyAppointmentsCache(cache, created, { scheduleQuery });
+            }
+          },
         });
+        if (!result.data?.createVetAppointment) {
+          return;
+        }
       } else if (appointment) {
-        await updateAppointment({
+        const result = await updateAppointment({
+          ...mutationOptions,
           variables: {
             id: appointment.id,
             input: {
@@ -169,9 +229,18 @@ function AppointmentFormDialogContent({
               status: form.status,
             },
           },
-          refetchQueries: [{ query: MY_APPOINTMENTS_QUERY }],
+          update: (cache, { data }) => {
+            const updated = data?.updateVetAppointment;
+            if (updated) {
+              upsertMyAppointmentsCache(cache, updated, { scheduleQuery });
+            }
+          },
         });
+        if (!result.data?.updateVetAppointment) {
+          return;
+        }
       }
+      await onSaved?.();
       onClose();
     } catch {
       // mutation error shown below
@@ -182,7 +251,7 @@ function AppointmentFormDialogContent({
     mode === 'add' ? t('appointments.newAppointment') : t('appointments.editAppointment');
 
   return (
-    <div className="patient-form-dialog__backdrop" role="presentation" onClick={onClose}>
+    <div className="patient-form-dialog__backdrop" role="presentation">
       <div
         className="patient-form-dialog__panel"
         role="dialog"
@@ -211,7 +280,7 @@ function AppointmentFormDialogContent({
               {t('appointments.noPatientsAvailableDescription')}
             </p>
             <Link className="ph-empty-state__action" to="/patients">
-              {t('patients.addPatient')}
+              {t('appointments.goToPatients')}
             </Link>
           </div>
         ) : (
@@ -265,6 +334,8 @@ function AppointmentFormDialogContent({
                 type="datetime-local"
                 className="ph-field__input"
                 value={form.scheduledAt}
+                min={dateTimeBounds?.min}
+                max={dateTimeBounds?.max}
                 onChange={(event) =>
                   setForm((current) => ({ ...current, scheduledAt: event.target.value }))
                 }

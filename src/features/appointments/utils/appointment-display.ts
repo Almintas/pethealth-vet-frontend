@@ -1,13 +1,25 @@
+import { normalizeAppointmentTypeValue } from '../constants/appointment-types';
 import type { VetAppointment } from '../types';
+
+export function getLocalizedAppointmentTypeLabel(
+  appointment: VetAppointment,
+  translate: (key: string) => string,
+): string {
+  const typeKey = normalizeAppointmentTypeValue(appointment.type);
+  return translate(`enums.appointmentType.${typeKey}`);
+}
 
 export function getOwnerFullName(appointment: VetAppointment): string {
   return `${appointment.patient.ownerFirstName} ${appointment.patient.ownerLastName}`.trim();
 }
 
-export function getSpeciesTypeLine(appointment: VetAppointment): string {
+export function getSpeciesTypeLine(
+  appointment: VetAppointment,
+  translate: (key: string) => string,
+): string {
   const species = appointment.patient.species.trim();
-  const type = appointment.type.trim();
-  return `${species} · ${type}`;
+  const typeLabel = getLocalizedAppointmentTypeLabel(appointment, translate);
+  return `${species} · ${typeLabel}`;
 }
 
 export function formatAppointmentTime(iso: string, locale: string): string {
@@ -44,4 +56,8 @@ export function isSameLocalDay(left: Date, right: Date): boolean {
 
 export function startOfLocalDay(date: Date): Date {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+export function endOfLocalDay(date: Date): Date {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
 }

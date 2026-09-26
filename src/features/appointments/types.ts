@@ -24,8 +24,17 @@ export type VetAppointment = {
   patient: AppointmentPatientSummary;
 };
 
+export type AppointmentsScheduleQueryInput = {
+  scheduledFrom?: string;
+  scheduledTo?: string;
+};
+
 export type MyAppointmentsQueryResult = {
   myAppointments: VetAppointment[];
+};
+
+export type PatientAppointmentsQueryResult = {
+  patientAppointments: VetAppointment[];
 };
 
 export type CreateVetAppointmentInput = {

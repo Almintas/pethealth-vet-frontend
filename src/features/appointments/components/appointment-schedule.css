@@ -1,23 +1,97 @@
-.appointments-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--ph-space-3);
+.appointments-page__controls {
   margin-bottom: var(--ph-space-5);
-}
-
-.appointments-toolbar__search {
-  flex: 1 1 14rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ph-space-4);
   min-width: 0;
 }
 
-.appointments-toolbar__filters {
+.appointments-day-nav {
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr) minmax(0, auto);
+  align-items: center;
+  gap: var(--ph-space-3);
+  min-width: 0;
+}
+
+.appointments-day-nav__date {
+  margin: 0;
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
+  color: var(--ph-color-text);
+  overflow-wrap: anywhere;
+}
+
+.appointments-day-nav__actions {
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--ph-space-2);
+}
+
+.appointments-day-nav__today:disabled {
+  opacity: 0.55;
+}
+
+.appointments-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(8.5rem, 10rem) minmax(8.5rem, 11rem);
   gap: var(--ph-space-3);
+  align-items: end;
+  min-width: 0;
+}
+
+.appointments-toolbar__search {
+  min-width: 0;
 }
 
 .appointments-toolbar__filter {
-  min-width: 10rem;
+  min-width: 0;
+}
+
+.appointments-toolbar__filter .ph-field__label {
+  font-size: 0.75rem;
+}
+
+.appointments-page__day-empty {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--ph-space-6);
+}
+
+.appointments-page__day-empty .ph-empty-state {
+  max-width: 28rem;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .appointments-day-nav {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      'date date'
+      'prev actions';
+  }
+
+  .appointments-day-nav__date {
+    grid-area: date;
+    text-align: left;
+    font-size: 1.0625rem;
+  }
+
+  .appointments-day-nav__prev {
+    grid-area: prev;
+    justify-self: start;
+  }
+
+  .appointments-day-nav__actions {
+    grid-area: actions;
+  }
+
+  .appointments-toolbar {
+    grid-template-columns: 1fr;
+  }
 }
 
 .appointments-section {
@@ -101,4 +175,26 @@
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--ph-color-text-secondary);
+}
+
+.appointment-row__patient-link {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ph-color-primary);
+  text-decoration: none;
+}
+
+.appointment-row__patient-link:hover {
+  text-decoration: underline;
+}
+
+.appointment-confirm {
+  margin-top: var(--ph-space-4);
+  padding-top: var(--ph-space-4);
+  border-top: 1px solid var(--ph-color-border);
+}
+
+.appointment-confirm__title {
+  margin: 0 0 var(--ph-space-2);
+  font-size: 1rem;
 }

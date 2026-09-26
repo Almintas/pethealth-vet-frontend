@@ -7,6 +7,8 @@ import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
 import { LoadingState } from '../../../components/feedback/LoadingState';
 import { MedicalHistorySection } from '../../medical-records/components/MedicalHistorySection';
 import { MedicationsSection } from '../../medications/components/MedicationsSection';
+import { AppointmentsSection } from '../../appointments/components/AppointmentsSection';
+import { VaccinationsSection } from '../../vaccinations/components/VaccinationsSection';
 import { PatientClinicalSummary } from '../components/PatientClinicalSummary';
 import { MY_CLINICS_QUERY } from '../../clinics/graphql';
 import type { MyClinicsQueryResult } from '../../clinics/types';
@@ -42,7 +44,6 @@ export function PatientProfilePage() {
     return null;
   }
 
-  const comingSoonSections = ['vaccinations', 'appointments'] as const;
   const clinics =
     clinicsData?.myClinics?.map((clinic) => ({
       id: clinic.id,
@@ -125,19 +126,9 @@ export function PatientProfilePage() {
 
           <MedicationsSection patient={patient} clinics={clinics} />
 
-          <section className="patient-profile__block patient-profile__block--last">
-            <h2 className="patient-profile__block-title">{t('patients.clinicalSections')}</h2>
-            <div className="patient-profile__future">
-              {comingSoonSections.map((key) => (
-                <div key={key} className="patient-profile__future-item">
-                  <span className="patient-profile__future-label">
-                    {t(`patients.${key}`)}
-                  </span>
-                  <span className="patient-profile__soon">{t('common.comingSoon')}</span>
-                </div>
-              ))}
-            </div>
-          </section>
+          <VaccinationsSection patient={patient} clinics={clinics} />
+
+          <AppointmentsSection patient={patient} />
 
           <PatientFormDialog
             mode="edit"

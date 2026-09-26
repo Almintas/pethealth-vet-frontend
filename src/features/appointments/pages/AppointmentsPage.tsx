@@ -11,14 +11,23 @@ import { AppointmentFormDialog } from '../components/AppointmentFormDialog';
 import { AppointmentSchedule } from '../components/AppointmentSchedule';
 import { MY_APPOINTMENTS_QUERY } from '../graphql';
 import type { AppointmentStatus, MyAppointmentsQueryResult, VetAppointment } from '../types';
+import { startOfLocalDay } from '../utils/appointment-display';
 import { filterAppointments } from '../utils/filter-appointments';
-import { groupAppointments } from '../utils/group-appointments';
+import {
+  addLocalDays,
+  formatScheduleDayTitle,
+  formatSelectedDayHeading,
+  isToday,
+  localDayRangeIso,
+  selectedDayIsoDate,
+} from '../utils/schedule-day';
 import '../components/appointment-schedule.css';
 
 const EMPTY_APPOINTMENTS: VetAppointment[] = [];
 
 export function AppointmentsPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const [selectedDay, setSelectedDay] = useState(() => startOfLocalDay(new Date()));
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<AppointmentStatus | 'ALL'>('ALL');
   const [typeFilter, setTypeFilter] = useState<string | 'ALL'>('ALL');
@@ -26,36 +35,58 @@ export function AppointmentsPage() {
   const [editAppointment, setEditAppointment] = useState<VetAppointment | null>(null);
   const [selectedAppointment, setSelectedAppointment] = useState<VetAppointment | null>(null);
 
-  const { data, loading, error, refetch } = useQuery<MyAppointmentsQueryResult>(
-    MY_APPOINTMENTS_QUERY,
-    { fetchPolicy: 'cache-and-network' },
+  const scheduleQuery = useMemo(
+    () => localDayRangeIso(selectedDay),
+    [selectedDay],
   );
 
-  const appointments = data?.myAppointments ?? EMPTY_APPOINTMENTS;
+  const { data, loading, error, refetch } = useQuery<MyAppointmentsQueryResult>(
+    MY_APPOINTMENTS_QUERY,
+    {
+      variables: { query: scheduleQuery },
+      fetchPolicy: 'cache-and-network',
+    },
+  );
+
+  const appointmentsForSelectedDay = data?.myAppointments ?? EMPTY_APPOINTMENTS;
+  const hasAnyAppointments = appointmentsForSelectedDay.length > 0;
+
   const filtered = useMemo(
     () =>
-      filterAppointments(appointments, {
+      filterAppointments(appointmentsForSelectedDay, {
         searchTerm,
         status: statusFilter,
         type: typeFilter,
       }),
-    [appointments, searchTerm, statusFilter, typeFilter],
+    [appointmentsForSelectedDay, searchTerm, statusFilter, typeFilter],
   );
-  const grouped = useMemo(() => groupAppointments(filtered), [filtered]);
 
-  const isInitialLoading = loading && appointments.length === 0;
+  const isInitialLoading = loading && appointmentsForSelectedDay.length === 0;
   const hasFilters =
     searchTerm.trim().length > 0 || statusFilter !== 'ALL' || typeFilter !== 'ALL';
-  const showTrueEmpty = !isInitialLoading && !error && appointments.length === 0;
+  const showTrueEmpty =
+    !isInitialLoading && !error && !hasAnyAppointments && isToday(selectedDay);
+  const showDayEmpty =
+    !isInitialLoading &&
+    !error &&
+    !showTrueEmpty &&
+    filtered.length === 0 &&
+    !hasFilters;
   const showFilteredEmpty =
-    !isInitialLoading && !error && appointments.length > 0 && filtered.length === 0 && hasFilters;
-  const hasVisible =
-    grouped.today.length > 0 ||
-    grouped.upcoming.length > 0 ||
-    grouped.past.length > 0;
+    !isInitialLoading &&
+    !error &&
+    appointmentsForSelectedDay.length > 0 &&
+    filtered.length === 0 &&
+    hasFilters;
+
+  const scheduleSectionTitle = formatScheduleDayTitle(selectedDay, i18n.language, {
+    today: t('appointments.today'),
+    tomorrow: t('appointments.tomorrow'),
+  });
+  const selectedDayHeading = formatSelectedDayHeading(selectedDay, i18n.language);
 
   return (
-    <div className="ph-page">
+    <div className="ph-page appointments-page">
       <header className="ph-page-header">
         <div>
           <p className="ph-page-header__eyebrow">{t('appointments.eyebrow')}</p>
@@ -71,7 +102,42 @@ export function AppointmentsPage() {
         </button>
       </header>
 
-      {!isInitialLoading && !error && appointments.length > 0 ? (
+      <section className="appointments-page__controls ph-card ph-card--pad" aria-label={t('appointments.scheduleControlsLabel')}>
+        <nav className="appointments-day-nav" aria-label={t('appointments.dayNavigationLabel')}>
+          <button
+            type="button"
+            className="ph-button ph-button--secondary appointments-day-nav__prev"
+            onClick={() => setSelectedDay((current) => addLocalDays(current, -1))}
+          >
+            {t('appointments.previousDay')}
+          </button>
+
+          <time
+            className="appointments-day-nav__date"
+            dateTime={selectedDayIsoDate(selectedDay)}
+          >
+            {selectedDayHeading}
+          </time>
+
+          <div className="appointments-day-nav__actions">
+            <button
+              type="button"
+              className="ph-button ph-button--secondary appointments-day-nav__today"
+              onClick={() => setSelectedDay(startOfLocalDay(new Date()))}
+              disabled={isToday(selectedDay)}
+            >
+              {t('appointments.today')}
+            </button>
+            <button
+              type="button"
+              className="ph-button ph-button--secondary"
+              onClick={() => setSelectedDay((current) => addLocalDays(current, 1))}
+            >
+              {t('appointments.nextDay')}
+            </button>
+          </div>
+        </nav>
+
         <div className="appointments-toolbar">
           <label className="ph-field appointments-toolbar__search">
             <span className="ph-visually-hidden">{t('appointments.searchLabel')}</span>
@@ -84,44 +150,42 @@ export function AppointmentsPage() {
               autoComplete="off"
             />
           </label>
-          <div className="appointments-toolbar__filters">
-            <label className="ph-field appointments-toolbar__filter">
-              <span className="ph-field__label">{t('appointments.status')}</span>
-              <select
-                className="ph-field__input"
-                value={statusFilter}
-                onChange={(event) =>
-                  setStatusFilter(event.target.value as AppointmentStatus | 'ALL')
-                }
-              >
-                <option value="ALL">{t('appointments.filterAll')}</option>
-                {(['SCHEDULED', 'COMPLETED', 'CANCELLED'] as AppointmentStatus[]).map(
-                  (status) => (
-                    <option key={status} value={status}>
-                      {t(`enums.appointmentStatus.${status}`)}
-                    </option>
-                  ),
-                )}
-              </select>
-            </label>
-            <label className="ph-field appointments-toolbar__filter">
-              <span className="ph-field__label">{t('appointments.appointmentType')}</span>
-              <select
-                className="ph-field__input"
-                value={typeFilter}
-                onChange={(event) => setTypeFilter(event.target.value)}
-              >
-                <option value="ALL">{t('appointments.filterAll')}</option>
-                {APPOINTMENT_TYPE_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {t(`enums.appointmentType.${option.value}`)}
+          <label className="ph-field appointments-toolbar__filter">
+            <span className="ph-field__label">{t('appointments.status')}</span>
+            <select
+              className="ph-field__input"
+              value={statusFilter}
+              onChange={(event) =>
+                setStatusFilter(event.target.value as AppointmentStatus | 'ALL')
+              }
+            >
+              <option value="ALL">{t('appointments.filterAll')}</option>
+              {(['SCHEDULED', 'COMPLETED', 'CANCELLED'] as AppointmentStatus[]).map(
+                (status) => (
+                  <option key={status} value={status}>
+                    {t(`enums.appointmentStatus.${status}`)}
                   </option>
-                ))}
-              </select>
-            </label>
-          </div>
+                ),
+              )}
+            </select>
+          </label>
+          <label className="ph-field appointments-toolbar__filter">
+            <span className="ph-field__label">{t('appointments.appointmentType')}</span>
+            <select
+              className="ph-field__input"
+              value={typeFilter}
+              onChange={(event) => setTypeFilter(event.target.value)}
+            >
+              <option value="ALL">{t('appointments.filterAll')}</option>
+              {APPOINTMENT_TYPE_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {t(`enums.appointmentType.${option.value}`)}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
-      ) : null}
+      </section>
 
       {isInitialLoading ? (
         <LoadingState message={t('appointments.loading')} skeleton skeletonLines={4} />
@@ -145,44 +209,56 @@ export function AppointmentsPage() {
         />
       ) : null}
 
+      {showDayEmpty ? (
+        <div className="appointments-page__day-empty">
+          <EmptyState
+            title={t('appointments.dayEmptyTitle')}
+            description={t('appointments.dayEmptyDescription')}
+            actionLabel={t('appointments.newAppointmentAction')}
+            onAction={() => setIsAddOpen(true)}
+          />
+        </div>
+      ) : null}
+
       {showFilteredEmpty ? (
-        <EmptyState
-          title={t('appointments.searchEmptyTitle')}
-          description={t('appointments.searchEmptyDescription')}
+        <div className="appointments-page__day-empty">
+          <EmptyState
+            title={t('appointments.searchEmptyTitle')}
+            description={t('appointments.searchEmptyDescription')}
+          />
+        </div>
+      ) : null}
+
+      {!error && filtered.length > 0 ? (
+        <AppointmentSchedule
+          title={scheduleSectionTitle}
+          appointments={filtered}
+          onSelect={setSelectedAppointment}
+          showViewPatientLink
         />
       ) : null}
 
-      {!error && hasVisible ? (
-        <>
-          <AppointmentSchedule
-            title={t('appointments.today')}
-            appointments={grouped.today}
-            onSelect={setSelectedAppointment}
-          />
-          <AppointmentSchedule
-            title={t('appointments.upcoming')}
-            appointments={grouped.upcoming}
-            showDateHeaders
-            onSelect={setSelectedAppointment}
-          />
-          <AppointmentSchedule
-            title={t('appointments.past')}
-            appointments={grouped.past}
-            showDateHeaders
-            onSelect={setSelectedAppointment}
-          />
-        </>
-      ) : null}
-
-      <AppointmentFormDialog mode="add" open={isAddOpen} onClose={() => setIsAddOpen(false)} />
+      <AppointmentFormDialog
+        mode="add"
+        open={isAddOpen}
+        onClose={() => setIsAddOpen(false)}
+        defaultScheduleDay={selectedDay}
+        scheduleDayLock={selectedDay}
+        scheduleQuery={scheduleQuery}
+        onSaved={() => void refetch()}
+      />
       <AppointmentFormDialog
         mode="edit"
         open={Boolean(editAppointment)}
         onClose={() => setEditAppointment(null)}
         appointment={editAppointment ?? undefined}
+        scheduleDayLock={selectedDay}
+        scheduleQuery={scheduleQuery}
+        onSaved={() => void refetch()}
       />
       <AppointmentDetailDialog
         appointment={selectedAppointment}
+        scheduleQuery={scheduleQuery}
         onClose={() => setSelectedAppointment(null)}
         onEdit={(appointment) => {
           setSelectedAppointment(null);

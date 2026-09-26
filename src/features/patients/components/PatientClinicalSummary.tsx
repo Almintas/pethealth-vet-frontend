@@ -11,6 +11,9 @@ import {
 import { PROFILE_MEDICATIONS_LIMIT } from '../../medications/constants/medications-limits';
 import { PATIENT_MEDICATIONS_PAGE_QUERY } from '../../medications/graphql';
 import type { PatientMedicationsPageQueryResult } from '../../medications/types';
+import { PATIENT_VACCINATIONS_PAGE_QUERY } from '../../vaccinations/graphql';
+import type { PatientVaccinationsPageQueryResult } from '../../vaccinations/types';
+import { formatVaccinationDate } from '../../vaccinations/utils/vaccination-display';
 import '../../medical-records/components/medical-history.css';
 
 type PatientClinicalSummaryProps = {
@@ -37,6 +40,17 @@ export function PatientClinicalSummary({ patientId }: PatientClinicalSummaryProp
       variables: {
         patientId,
         query: { page: 1, limit: PROFILE_MEDICATIONS_LIMIT },
+      },
+      fetchPolicy: 'cache-and-network',
+    },
+  );
+
+  const { data: vaccinationsData } = useQuery<PatientVaccinationsPageQueryResult>(
+    PATIENT_VACCINATIONS_PAGE_QUERY,
+    {
+      variables: {
+        patientId,
+        query: { page: 1, limit: 1 },
       },
       fetchPolicy: 'cache-and-network',
     },
@@ -80,6 +94,35 @@ export function PatientClinicalSummary({ patientId }: PatientClinicalSummaryProp
     };
   }, [medicationsData?.patientMedicationsPage, t]);
 
+  const vaccinationSummary = useMemo(() => {
+    const pageResult = vaccinationsData?.patientVaccinationsPage;
+    const total = pageResult?.total ?? 0;
+    const nextDueVaccineName = pageResult?.nextDueVaccineName;
+    const nextDueAt = pageResult?.nextDueAt;
+
+    if (total === 0) {
+      return {
+        label: t('vaccinations.clinicalSummaryLabel'),
+        value: t('vaccinations.noRecordsYet'),
+      };
+    }
+
+    if (nextDueVaccineName && nextDueAt) {
+      return {
+        label: t('vaccinations.nextVaccination'),
+        value: t('vaccinations.nextVaccinationSummary', {
+          vaccine: nextDueVaccineName,
+          date: formatVaccinationDate(nextDueAt, i18n.language),
+        }),
+      };
+    }
+
+    return {
+      label: t('vaccinations.clinicalSummaryLabel'),
+      value: t('vaccinations.upToDate'),
+    };
+  }, [vaccinationsData?.patientVaccinationsPage, i18n.language, t]);
+
   return (
     <section className="patient-profile__block" aria-labelledby="clinical-summary-heading">
       <h2 id="clinical-summary-heading" className="patient-profile__block-title">
@@ -105,6 +148,10 @@ export function PatientClinicalSummary({ patientId }: PatientClinicalSummaryProp
         <div>
           <dt>{t('medications.latestMedication')}</dt>
           <dd>{medicationSummary.latestLabel}</dd>
+        </div>
+        <div>
+          <dt>{vaccinationSummary.label}</dt>
+          <dd>{vaccinationSummary.value}</dd>
         </div>
       </dl>
     </section>

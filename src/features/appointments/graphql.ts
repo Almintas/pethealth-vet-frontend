@@ -32,8 +32,17 @@ export const VET_APPOINTMENT_FIELDS = gql`
 `;
 
 export const MY_APPOINTMENTS_QUERY = gql`
-  query MyAppointments {
-    myAppointments {
+  query MyAppointments($query: AppointmentsScheduleQueryInput) {
+    myAppointments(query: $query) {
+      ...VetAppointmentFields
+    }
+  }
+  ${VET_APPOINTMENT_FIELDS}
+`;
+
+export const PATIENT_APPOINTMENTS_QUERY = gql`
+  query PatientAppointments($patientId: ID!, $query: AppointmentsScheduleQueryInput) {
+    patientAppointments(patientId: $patientId, query: $query) {
       ...VetAppointmentFields
     }
   }
