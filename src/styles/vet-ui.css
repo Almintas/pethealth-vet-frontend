@@ -1,0 +1,123 @@
+.ph-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--ph-control-height);
+  padding: 0 1.125rem;
+  border-radius: var(--ph-radius-md);
+  border: 1px solid transparent;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.ph-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.ph-button--primary {
+  color: var(--ph-color-on-primary);
+  background: var(--ph-color-primary);
+}
+
+.ph-button--primary:hover:not(:disabled) {
+  background: var(--ph-color-primary-hover);
+}
+
+.ph-button--secondary {
+  color: var(--ph-color-text-secondary);
+  background: var(--ph-color-surface);
+  border-color: var(--ph-color-border);
+}
+
+.ph-button--secondary:hover:not(:disabled) {
+  background: var(--ph-color-surface-muted);
+}
+
+.ph-button:focus-visible {
+  outline: none;
+  box-shadow: var(--ph-focus-ring);
+}
+
+.ph-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ph-space-2);
+}
+
+.ph-field__label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ph-color-text);
+}
+
+.ph-field__input,
+.ph-field__textarea {
+  width: 100%;
+  min-height: var(--ph-control-height);
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--ph-color-border);
+  border-radius: var(--ph-radius-md);
+  background: var(--ph-color-input-bg);
+  color: var(--ph-color-text);
+}
+
+.ph-field__textarea {
+  min-height: 5.5rem;
+  resize: vertical;
+}
+
+.ph-field__input:focus,
+.ph-field__textarea:focus {
+  outline: none;
+  border-color: var(--ph-color-primary);
+  box-shadow: var(--ph-focus-ring);
+}
+
+.ph-field__error {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--ph-color-danger-text);
+}
+
+.ph-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.5rem;
+  border-radius: var(--ph-radius-full);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.ph-badge--success {
+  color: var(--ph-color-success-text);
+  background: var(--ph-color-success-soft);
+}
+
+.ph-link-button {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ph-color-primary);
+  text-decoration: none;
+}
+
+.ph-link-button:hover {
+  color: var(--ph-color-primary-hover);
+  text-decoration: underline;
+}
+
+.ph-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ph-space-3);
+  margin-bottom: var(--ph-space-4);
+}
