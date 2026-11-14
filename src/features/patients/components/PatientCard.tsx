@@ -6,6 +6,7 @@ import {
   getOwnerFullName,
   getSpeciesBreedLine,
 } from '../utils/patient-display';
+import { translatePetGender } from '../utils/pet-field-display';
 
 type PatientCardProps = {
   patient: Patient;
@@ -15,7 +16,7 @@ type PatientCardProps = {
 export function PatientCard({ patient, onEdit }: PatientCardProps) {
   const { t, i18n } = useTranslation();
   const ownerName = getOwnerFullName(patient);
-  const speciesLine = getSpeciesBreedLine(patient);
+  const speciesLine = getSpeciesBreedLine(patient, t);
   const dateOfBirth = formatPatientDateOfBirth(
     patient.dateOfBirth,
     i18n.language,
@@ -36,7 +37,11 @@ export function PatientCard({ patient, onEdit }: PatientCardProps) {
         <dl className="patient-card__meta">
           <div>
             <dt>{t('patients.gender')}</dt>
-            <dd>{patient.gender?.trim() || t('common.notProvided')}</dd>
+            <dd>
+              {patient.gender?.trim()
+                ? translatePetGender(patient.gender, t)
+                : t('common.notProvided')}
+            </dd>
           </div>
           <div>
             <dt>{t('patients.dateOfBirth')}</dt>

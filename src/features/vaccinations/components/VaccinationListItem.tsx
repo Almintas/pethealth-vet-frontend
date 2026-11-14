@@ -15,15 +15,11 @@ export function VaccinationListItem({ vaccination, onView }: VaccinationListItem
       <p className="medical-history__item-date">
         {formatVaccinationDate(vaccination.administeredAt, i18n.language)}
       </p>
-      <p className="medical-history__item-title">{vaccination.vaccineName}</p>
-      <p className="medical-history__item-preview">
-        {t('vaccinations.administered')}:{' '}
-        {formatVaccinationDate(vaccination.administeredAt, i18n.language)}
-      </p>
+      <p className="medical-history__item-type">{vaccination.vaccineName}</p>
       {vaccination.nextDueAt ? (
-        <p className="medical-history__item-type">
+        <p className="medical-history__item-preview">
           {t('vaccinations.nextDue')}:{' '}
-          {formatVaccinationDate(vaccination.nextDueAt, i18n.language)}
+          <strong>{formatVaccinationDate(vaccination.nextDueAt, i18n.language)}</strong>
         </p>
       ) : null}
       {vaccination.veterinarianName ? (

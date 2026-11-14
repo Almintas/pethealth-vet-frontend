@@ -35,6 +35,7 @@ const en = {
     signingOut: 'Signing out…',
   },
   auth: {
+    audience: 'Clinic workspace',
     welcomeBack: 'Welcome back',
     signInSubtitle: 'Sign in to your PetHealth Vet account.',
     email: 'Email',
@@ -106,7 +107,11 @@ const en = {
   },
   dashboard: {
     eyebrow: 'Overview',
-    greeting: 'Good morning, {{name}}',
+    greeting: {
+      morning: 'Good morning, {{name}}',
+      afternoon: 'Good afternoon, {{name}}',
+      evening: 'Good evening, {{name}}',
+    },
     subtitle: "Here's what's happening with your patients today.",
     todayAppointments: "Today's appointments",
     todayEmptyTitle: 'No appointments today',
@@ -125,7 +130,7 @@ const en = {
       viewAppointments: 'View appointments',
       viewAppointmentsDescription: 'See your full appointment schedule.',
       addMedicalRecord: 'Add medical record',
-      addMedicalRecordDescription: 'Document a visit or clinical note.',
+      addMedicalRecordDescription: 'Choose a patient, then document the visit.',
     },
   },
   patients: {

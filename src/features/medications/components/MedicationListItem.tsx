@@ -19,14 +19,19 @@ export function MedicationListItem({ medication, onView }: MedicationListItemPro
 
   return (
     <article className="medical-history__item">
-      <p className="medical-history__item-title">{medication.name}</p>
-      <p className="medical-history__item-preview">{formatDosageLine(medication)}</p>
       <p className="medical-history__item-date">
         {t('medications.started')}: {formatMedicationDate(medication.startDate, i18n.language)}
       </p>
-      <p className="medical-history__item-type">
-        {t('medications.status')}: {statusLabel}
-      </p>
+      <div className="medical-history__item-heading">
+        <p className="medical-history__item-type">{medication.name}</p>
+        <span
+          className={medication.isActive ? 'ph-badge ph-badge--success' : 'ph-badge'}
+          aria-label={`${t('medications.status')}: ${statusLabel}`}
+        >
+          {statusLabel}
+        </span>
+      </div>
+      <p className="medical-history__item-preview">{formatDosageLine(medication)}</p>
       {medication.veterinarianName ? (
         <p className="medical-history__item-vet">{medication.veterinarianName}</p>
       ) : null}

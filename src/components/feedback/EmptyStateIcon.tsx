@@ -1,4 +1,4 @@
-import catPawMark from '../../assets/pethealth-cat-paw-from-reference.svg';
+import catPawMark from '../../assets/paw-soft.svg';
 
 export function EmptyStateIcon() {
   return (

@@ -13,7 +13,7 @@
 }
 
 .patient-profile__sheet {
-  max-width: 40rem;
+  min-width: 0;
 }
 
 .patient-profile__header {
@@ -117,4 +117,32 @@
   color: var(--ph-color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.04em;
+}
+
+/* Wide screens: patient facts on the left, clinical history on the right. */
+.patient-profile__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0 var(--ph-space-8);
+}
+
+.patient-profile__aside,
+.patient-profile__main {
+  min-width: 0;
+}
+
+@media (min-width: 1180px) {
+  .patient-profile__layout {
+    grid-template-columns: minmax(16rem, 22rem) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .patient-profile__aside {
+    position: sticky;
+    top: var(--ph-space-5);
+  }
+
+  .patient-profile__aside .patient-profile__details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }

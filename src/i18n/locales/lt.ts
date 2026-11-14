@@ -37,6 +37,7 @@ const lt = {
     signingOut: 'Atsijungiama…',
   },
   auth: {
+    audience: 'Klinikos darbo erdvė',
     welcomeBack: 'Sveiki sugrįžę',
     signInSubtitle: 'Prisijunkite prie PetHealth Vet paskyros.',
     email: 'El. paštas',
@@ -108,7 +109,11 @@ const lt = {
   },
   dashboard: {
     eyebrow: 'Apžvalga',
-    greeting: 'Labas rytas, {{name}}',
+    greeting: {
+      morning: 'Labas rytas, {{name}}',
+      afternoon: 'Laba diena, {{name}}',
+      evening: 'Labas vakaras, {{name}}',
+    },
     subtitle: 'Štai kas vyksta su jūsų pacientais šiandien.',
     todayAppointments: 'Šiandienos vizitai',
     todayEmptyTitle: 'Šiandien vizitų nėra',
@@ -129,7 +134,7 @@ const lt = {
       viewAppointments: 'Peržiūrėti vizitus',
       viewAppointmentsDescription: 'Peržiūrėti visą vizitų grafiką.',
       addMedicalRecord: 'Pridėti medicininį įrašą',
-      addMedicalRecordDescription: 'Užfiksuoti vizitą ar klinikinę pastabą.',
+      addMedicalRecordDescription: 'Pasirinkite pacientą ir užfiksuokite vizitą.',
     },
   },
   patients: {

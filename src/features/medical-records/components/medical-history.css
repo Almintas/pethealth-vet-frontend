@@ -126,3 +126,10 @@
   border-radius: var(--ph-radius-md);
   background: var(--ph-color-surface-muted);
 }
+
+.medical-history__item-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ph-space-2);
+}

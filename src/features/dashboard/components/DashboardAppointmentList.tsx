@@ -2,11 +2,15 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { EmptyState } from '../../../components/feedback/EmptyState';
 import { normalizeAppointmentTypeValue } from '../../appointments/constants/appointment-types';
+import { translatePetSpecies } from '../../patients/utils/pet-field-display';
 
-/** Ready for backend integration — populate from GraphQL when available. */
 export type DashboardAppointment = {
   id: string;
   time: string;
+  /** ISO timestamp for the <time> element. */
+  scheduledAt?: string;
+  /** Day label for appointments that are not today, e.g. "Pr, lapkr. 16". */
+  dateLabel?: string;
   petName: string;
   species?: string | null;
   appointmentType: string;
@@ -44,13 +48,23 @@ export function DashboardAppointmentList({
         <li key={appointment.id}>
           <article className="ph-card ph-card--pad dashboard-appointment-card">
             <div className="dashboard-appointment-card__main">
-              <time className="dashboard-appointment-card__time" dateTime={appointment.time}>
+              <time
+                className="dashboard-appointment-card__time"
+                dateTime={appointment.scheduledAt ?? appointment.time}
+              >
+                {appointment.dateLabel ? (
+                  <span className="dashboard-appointment-card__date">
+                    {appointment.dateLabel}
+                  </span>
+                ) : null}
                 {appointment.time}
               </time>
               <div>
                 <h3 className="dashboard-appointment-card__pet">{appointment.petName}</h3>
                 {appointment.species ? (
-                  <p className="dashboard-appointment-card__meta">{appointment.species}</p>
+                  <p className="dashboard-appointment-card__meta">
+                    {translatePetSpecies(appointment.species, t)}
+                  </p>
                 ) : null}
                 <p className="dashboard-appointment-card__meta">
                   {t(

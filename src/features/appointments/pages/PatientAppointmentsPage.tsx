@@ -94,7 +94,7 @@ export function PatientAppointmentsPage() {
         <header className="medical-history-page__header ph-card ph-card--pad">
           <p className="medical-history-page__eyebrow">{t('appointments.title')}</p>
           <h1 className="medical-history-page__title">{patient.name}</h1>
-          <p className="medical-history-page__subtitle">{getSpeciesBreedLine(patient)}</p>
+          <p className="medical-history-page__subtitle">{getSpeciesBreedLine(patient, t)}</p>
           <p className="medical-history-page__context">
             {t('appointments.patientAppointmentsFor', { name: patient.name })}
           </p>

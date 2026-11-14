@@ -21,6 +21,11 @@ import {
   getSpeciesBreedLine,
 } from '../utils/patient-display';
 import '../components/patient-profile.css';
+import {
+  translatePetBreed,
+  translatePetGender,
+  translatePetSpecies,
+} from '../utils/pet-field-display';
 
 export function PatientProfilePage() {
   const { t, i18n } = useTranslation();
@@ -76,7 +81,7 @@ export function PatientProfilePage() {
           <header className="patient-profile__header">
             <div>
               <h1 className="patient-profile__name">{patient.name}</h1>
-              <p className="patient-profile__species">{getSpeciesBreedLine(patient)}</p>
+              <p className="patient-profile__species">{getSpeciesBreedLine(patient, t)}</p>
             </div>
             <button
               type="button"
@@ -87,48 +92,61 @@ export function PatientProfilePage() {
             </button>
           </header>
 
-          <section className="patient-profile__block">
-            <h2 className="patient-profile__block-title">{t('patients.owner')}</h2>
-            <p className="patient-profile__value">{getOwnerFullName(patient)}</p>
-            {patient.owner.email ? (
-              <p className="patient-profile__muted">{patient.owner.email}</p>
-            ) : null}
-          </section>
+          <div className="patient-profile__layout">
+            <div className="patient-profile__aside">
+              <section className="patient-profile__block">
+                <h2 className="patient-profile__block-title">{t('patients.owner')}</h2>
+                <p className="patient-profile__value">{getOwnerFullName(patient)}</p>
+                {patient.owner.email ? (
+                  <p className="patient-profile__muted">{patient.owner.email}</p>
+                ) : null}
+              </section>
 
-          <section className="patient-profile__block">
-            <h2 className="patient-profile__block-title">{t('patients.patientOverview')}</h2>
-            <dl className="patient-profile__details">
-              <div>
-                <dt>{t('patients.gender')}</dt>
-                <dd>{patient.gender ?? t('common.notProvided')}</dd>
-              </div>
-              <div>
-                <dt>{t('patients.dateOfBirth')}</dt>
-                <dd>
-                  {formatPatientDateOfBirth(patient.dateOfBirth, i18n.language) ??
-                    t('common.notProvided')}
-                </dd>
-              </div>
-              <div>
-                <dt>{t('patients.species')}</dt>
-                <dd>{patient.species}</dd>
-              </div>
-              <div>
-                <dt>{t('patients.breed')}</dt>
-                <dd>{patient.breed?.trim() || t('common.notProvided')}</dd>
-              </div>
-            </dl>
-          </section>
+              <section className="patient-profile__block">
+                <h2 className="patient-profile__block-title">{t('patients.patientOverview')}</h2>
+                <dl className="patient-profile__details">
+                  <div>
+                    <dt>{t('patients.gender')}</dt>
+                    <dd>
+                      {patient.gender?.trim()
+                        ? translatePetGender(patient.gender, t)
+                        : t('common.notProvided')}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>{t('patients.dateOfBirth')}</dt>
+                    <dd>
+                      {formatPatientDateOfBirth(patient.dateOfBirth, i18n.language) ??
+                        t('common.notProvided')}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>{t('patients.species')}</dt>
+                    <dd>{translatePetSpecies(patient.species, t)}</dd>
+                  </div>
+                  <div>
+                    <dt>{t('patients.breed')}</dt>
+                    <dd>
+                      {patient.breed?.trim()
+                        ? translatePetBreed(patient.breed, t)
+                        : t('common.notProvided')}
+                    </dd>
+                  </div>
+                </dl>
+              </section>
 
-          <PatientClinicalSummary patientId={patient.id} />
+              <PatientClinicalSummary patientId={patient.id} />
+            </div>
+            <div className="patient-profile__main">
+              <MedicalHistorySection patient={patient} clinics={clinics} />
 
-          <MedicalHistorySection patient={patient} clinics={clinics} />
+              <MedicationsSection patient={patient} clinics={clinics} />
 
-          <MedicationsSection patient={patient} clinics={clinics} />
+              <VaccinationsSection patient={patient} clinics={clinics} />
 
-          <VaccinationsSection patient={patient} clinics={clinics} />
-
-          <AppointmentsSection patient={patient} />
+              <AppointmentsSection patient={patient} />
+            </div>
+          </div>
 
           <PatientFormDialog
             mode="edit"

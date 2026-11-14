@@ -11,7 +11,15 @@ export function mapAppointmentsToDashboard(
   upcoming: DashboardAppointment[];
 } {
   const grouped = groupAppointments(appointments);
-  const mapOne = (appointment: VetAppointment): DashboardAppointment => ({
+  // "lapkričio 16 d." / "16 November"
+  const dayFormatter = new Intl.DateTimeFormat(locale, {
+    month: 'long',
+    day: 'numeric',
+  });
+  const mapOne = (
+    appointment: VetAppointment,
+    withDate: boolean,
+  ): DashboardAppointment => ({
     id: appointment.id,
     patientId: appointment.petId,
     petName: appointment.patient.name,
@@ -20,10 +28,16 @@ export function mapAppointmentsToDashboard(
     ownerName: `${appointment.patient.ownerFirstName} ${appointment.patient.ownerLastName}`.trim(),
     status: appointment.status,
     time: formatAppointmentTime(appointment.scheduledAt, locale),
+    scheduledAt: appointment.scheduledAt,
+    dateLabel: withDate
+      ? dayFormatter.format(new Date(appointment.scheduledAt))
+      : undefined,
   });
 
   return {
-    today: grouped.today.map(mapOne),
-    upcoming: grouped.upcoming.slice(0, 5).map(mapOne),
+    today: grouped.today.map((appointment) => mapOne(appointment, false)),
+    upcoming: grouped.upcoming
+      .slice(0, 5)
+      .map((appointment) => mapOne(appointment, true)),
   };
 }

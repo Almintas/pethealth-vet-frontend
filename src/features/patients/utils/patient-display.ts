@@ -1,16 +1,22 @@
+import type { TFunction } from 'i18next';
 import type { Patient } from '../types';
+import { translatePetBreed, translatePetSpecies } from './pet-field-display';
 
 export function getOwnerFullName(patient: Patient): string {
   return `${patient.owner.firstName} ${patient.owner.lastName}`.trim();
 }
 
-export function getSpeciesBreedLine(patient: Patient): string {
-  const parts = [patient.species.trim()];
+/** "Katė · Meino meškėnas" — species and breed in the current language. */
+export function getSpeciesBreedLine(
+  patient: Pick<Patient, 'species' | 'breed'>,
+  t: TFunction,
+): string {
+  const parts = [translatePetSpecies(patient.species, t)];
   const breed = patient.breed?.trim();
   if (breed) {
-    parts.push(breed);
+    parts.push(translatePetBreed(breed, t));
   }
-  return parts.join(' · ');
+  return parts.filter(Boolean).join(' · ');
 }
 
 export function formatPatientDateOfBirth(

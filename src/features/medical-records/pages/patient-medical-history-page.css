@@ -1,6 +1,6 @@
 .medical-history-page {
-  max-width: 40rem;
-  margin: 0 auto;
+  /* Left-aligned like every other page; capped for comfortable reading. */
+  max-width: 60rem;
 }
 
 .medical-history-page__header {

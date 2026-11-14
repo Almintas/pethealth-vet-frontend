@@ -86,7 +86,10 @@
 }
 
 .patient-card__edit-button {
-  min-height: 2.25rem;
+  min-height: var(--ph-btn-height);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .patients-toolbar {

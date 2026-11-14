@@ -1,7 +1,6 @@
 import { useQuery } from '@apollo/client/react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { EmptyState } from '../../../components/feedback/EmptyState';
 import { MY_APPOINTMENTS_QUERY } from '../../appointments/graphql';
 import type { MyAppointmentsQueryResult } from '../../appointments/types';
 import { mapAppointmentsToDashboard } from '../../appointments/utils/map-to-dashboard';
@@ -9,7 +8,12 @@ import { useAuth, getVeterinarianFirstName } from '../../auth';
 import {
   DashboardAppointmentList,
 } from '../components/DashboardAppointmentList';
+import { MY_PATIENTS_QUERY } from '../../patients/graphql';
+import type { MyPatientsQueryResult } from '../../patients/types';
 import { DashboardQuickActions } from '../components/DashboardQuickActions';
+import { DashboardRecentPatients } from '../components/DashboardRecentPatients';
+import { selectRecentPatients } from '../utils/recent-patients';
+import { getGreetingPeriod } from '../utils/greeting';
 import { DashboardSection } from '../components/DashboardSection';
 import '../dashboard.css';
 
@@ -26,7 +30,14 @@ export function DashboardPage() {
     () => mapAppointmentsToDashboard(data?.myAppointments ?? [], i18n.language),
     [data?.myAppointments, i18n.language],
   );
-  const recentPatients: unknown[] = [];
+  const { data: patientsData } = useQuery<MyPatientsQueryResult>(MY_PATIENTS_QUERY, {
+    fetchPolicy: 'cache-and-network',
+  });
+  const recentPatients = useMemo(
+    () => selectRecentPatients(patientsData?.myPatients ?? []),
+    [patientsData?.myPatients],
+  );
+  const greetingPeriod = getGreetingPeriod();
 
   return (
     <div className="ph-page dashboard">
@@ -34,7 +45,7 @@ export function DashboardPage() {
         <div>
           <p className="ph-page-header__eyebrow">{t('dashboard.eyebrow')}</p>
           <h1 className="ph-page-header__title">
-            {t('dashboard.greeting', { name: firstName })}
+            {t(`dashboard.greeting.${greetingPeriod}`, { name: firstName })}
           </h1>
           <p className="ph-page-header__subtitle">{t('dashboard.subtitle')}</p>
         </div>
@@ -69,13 +80,7 @@ export function DashboardPage() {
             id="dashboard-recent-patients-title"
             title={t('dashboard.recentPatients')}
           >
-            {recentPatients.length === 0 ? (
-              <EmptyState
-                section
-                title={t('dashboard.recentPatientsEmptyTitle')}
-                description={t('dashboard.recentPatientsEmptyDescription')}
-              />
-            ) : null}
+            <DashboardRecentPatients patients={recentPatients} />
           </DashboardSection>
         </div>
 

@@ -36,6 +36,7 @@ import type {
   VetAppointment,
 } from '../types';
 import '../../patients/components/patient-form-dialog.css';
+import { translatePetSpecies } from '../../patients/utils/pet-field-display';
 
 type AppointmentFormDialogProps = {
   mode: 'add' | 'edit';
@@ -320,7 +321,7 @@ function AppointmentFormDialogContent({
                   <option value="">{t('appointments.selectPatient')}</option>
                   {patients.map((patient) => (
                     <option key={patient.id} value={patient.id}>
-                      {patient.name} · {patient.species}
+                      {patient.name} · {translatePetSpecies(patient.species, t)}
                       {patient.breed ? ` · ${patient.breed}` : ''}
                     </option>
                   ))}

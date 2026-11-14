@@ -22,6 +22,7 @@ import {
   hasActivePatientFilters,
 } from '../utils/filter-patients';
 import '../components/patient-card.css';
+import { translatePetSpecies } from '../utils/pet-field-display';
 
 const EMPTY_PATIENTS: MyPatientsQueryResult['myPatients'] = [];
 
@@ -148,7 +149,7 @@ export function PatientsPage() {
                   <option value={ALL_SPECIES}>{t('patients.allSpecies')}</option>
                   {speciesOptions.map((species) => (
                     <option key={species} value={species}>
-                      {species}
+                      {translatePetSpecies(species, t)}
                     </option>
                   ))}
                 </select>

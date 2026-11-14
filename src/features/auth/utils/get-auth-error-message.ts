@@ -15,6 +15,36 @@ export type UserErrorContext =
   | 'generic-load'
   | 'generic-save';
 
+function readRawErrorMessages(error: unknown): string[] {
+  if (CombinedGraphQLErrors.is(error)) {
+    return error.errors.map((graphQLError) => graphQLError.message);
+  }
+  if (error instanceof Error) {
+    return [error.message];
+  }
+  return [];
+}
+
+/**
+ * Wrong credentials also come back as 401/UNAUTHENTICATED, so they must be
+ * recognised before the generic "session expired" handling.
+ */
+function mapCredentialFailure(error: unknown): string | null {
+  const messages = readRawErrorMessages(error).map((message) =>
+    message.toLowerCase(),
+  );
+  if (
+    messages.some(
+      (message) =>
+        message.includes('invalid credentials') ||
+        message.includes('invalid email or password'),
+    )
+  ) {
+    return i18n.t('errors.invalidCredentials');
+  }
+  return null;
+}
+
 function isUnauthorizedError(error: unknown): boolean {
   if (CombinedGraphQLErrors.is(error)) {
     return error.errors.some((graphQLError) => {
@@ -138,6 +168,11 @@ export function getUserFacingErrorMessage(
   error: unknown,
   context: UserErrorContext = 'generic-load',
 ): string {
+  const credentialFailure = mapCredentialFailure(error);
+  if (credentialFailure) {
+    return credentialFailure;
+  }
+
   if (isUnauthorizedError(error)) {
     return i18n.t('errors.sessionExpired');
   }

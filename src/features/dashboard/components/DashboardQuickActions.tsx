@@ -32,7 +32,7 @@ const quickActions: QuickAction[] = [
     id: 'add-medical-record',
     labelKey: 'dashboard.quickActions.addMedicalRecord',
     descriptionKey: 'dashboard.quickActions.addMedicalRecordDescription',
-    comingSoon: true,
+    to: '/patients',
   },
 ];
 

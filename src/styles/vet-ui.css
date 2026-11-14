@@ -2,11 +2,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: var(--ph-control-height);
-  padding: 0 1.125rem;
-  border-radius: var(--ph-radius-md);
+  padding: 0 var(--ph-btn-padding-x);
+  min-height: var(--ph-btn-height);
+  border-radius: var(--ph-btn-radius);
   border: 1px solid transparent;
-  font-size: 0.875rem;
+  font-size: var(--ph-btn-font-size);
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
