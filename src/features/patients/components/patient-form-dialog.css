@@ -161,3 +161,16 @@
   font-size: 0.8125rem;
   color: var(--ph-color-danger-text);
 }
+
+.patient-form-dialog__intro {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--ph-color-text-secondary);
+}
+
+.patient-form-dialog__code-input {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 1.25rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}

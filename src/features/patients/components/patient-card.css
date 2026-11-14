@@ -141,3 +141,9 @@
     text-align: center;
   }
 }
+
+.patients-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ph-space-3);
+}

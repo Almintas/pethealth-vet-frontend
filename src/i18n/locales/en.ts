@@ -129,6 +129,22 @@ const en = {
     },
   },
   patients: {
+    claim: {
+      action: 'Add by owner code',
+      actionHint: 'Owner already uses PetHealth? Ask them to create an access code.',
+      title: 'Add patient by code',
+      description:
+        'If the owner already uses PetHealth, ask them to tap “Create code for clinic” on their pet’s page and enter the code here. The code is single-use and valid for 15 minutes.',
+      codeLabel: 'Owner code',
+      codeInvalidFormat: 'The code has 8 characters, e.g. ABCD-2345.',
+      submit: 'Add patient',
+      submitting: 'Checking…',
+      ownerHasAccount:
+        'This owner already has a PetHealth account. Ask them to create an access code and use “Add by owner code”.',
+      codeInvalid: 'The code is invalid or has expired. Ask the owner to create a new one.',
+      ownerManagesProfile:
+        'The owner manages their own account, so their name and email cannot be changed here. You can save other patient details without editing the owner fields.',
+    },
     eyebrow: 'Patients',
     title: 'Patients',
     subtitle: 'View and manage the patients you currently have access to.',

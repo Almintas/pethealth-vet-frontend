@@ -133,6 +133,22 @@ const lt = {
     },
   },
   patients: {
+    claim: {
+      action: 'Pridėti pagal savininko kodą',
+      actionHint: 'Savininkas jau naudoja PetHealth? Paprašykite jo sukurti prieigos kodą.',
+      title: 'Pridėti pacientą pagal kodą',
+      description:
+        'Jei savininkas jau naudoja PetHealth, paprašykite jo augintinio puslapyje paspausti „Sukurti kodą klinikai“ ir įveskite gautą kodą. Kodas galioja 15 minučių ir yra vienkartinis.',
+      codeLabel: 'Savininko kodas',
+      codeInvalidFormat: 'Kodą sudaro 8 simboliai, pvz. ABCD-2345.',
+      submit: 'Pridėti pacientą',
+      submitting: 'Tikrinama…',
+      ownerHasAccount:
+        'Šis savininkas jau turi PetHealth paskyrą. Paprašykite jo sukurti prieigos kodą ir naudokite „Pridėti pagal savininko kodą“.',
+      codeInvalid: 'Kodas neteisingas arba nebegalioja. Paprašykite savininko sukurti naują.',
+      ownerManagesProfile:
+        'Savininkas pats tvarko savo paskyrą, todėl jo vardo ir el. pašto keisti negalima. Kitus paciento duomenis galite išsaugoti nepakeitę savininko laukų.',
+    },
     eyebrow: 'Pacientai',
     title: 'Pacientai',
     subtitle: 'Peržiūrėkite ir valdykite pacientus, prie kurių turite prieigą.',

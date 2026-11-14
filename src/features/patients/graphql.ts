@@ -71,3 +71,12 @@ export const UPDATE_PATIENT_MUTATION = gql`
   }
   ${PATIENT_FIELDS}
 `;
+
+export const CLAIM_PATIENT_BY_SHARE_CODE_MUTATION = gql`
+  mutation ClaimPatientByShareCode($input: ClaimPatientByShareCodeInput!) {
+    claimPatientByShareCode(input: $input) {
+      ...PatientFields
+    }
+  }
+  ${PATIENT_FIELDS}
+`;

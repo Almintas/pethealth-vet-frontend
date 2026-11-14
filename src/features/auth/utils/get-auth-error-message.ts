@@ -77,6 +77,15 @@ function mapKnownBackendMessage(message: string): string | null {
   ) {
     return i18n.t('errors.invalidCredentials');
   }
+  if (normalized.includes('owner account with this email already exists')) {
+    return i18n.t('patients.claim.ownerHasAccount');
+  }
+  if (normalized.includes('code is invalid or has expired')) {
+    return i18n.t('patients.claim.codeInvalid');
+  }
+  if (normalized.includes('manages their own account')) {
+    return i18n.t('patients.claim.ownerManagesProfile');
+  }
   if (
     normalized.includes('already associated with another account') ||
     normalized.includes('email is already associated')

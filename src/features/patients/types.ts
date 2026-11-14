@@ -60,3 +60,9 @@ export type UpdatePatientInput = {
   dateOfBirth?: string | null;
   owner?: UpdatePatientOwnerInput;
 };
+
+export type ClaimPatientByShareCodeInput = {
+  clinicId: string;
+  /** Owner's one-time code, e.g. "ABCD-2345". */
+  code: string;
+};

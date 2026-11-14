@@ -8,6 +8,7 @@ import { ErrorAlert } from '../../../components/feedback/ErrorAlert';
 import { LoadingState } from '../../../components/feedback/LoadingState';
 import { MY_CLINICS_QUERY } from '../../clinics/graphql';
 import type { MyClinicsQueryResult } from '../../clinics/types';
+import { ClaimPatientDialog } from '../components/ClaimPatientDialog';
 import { PatientCard } from '../components/PatientCard';
 import { PatientFormDialog } from '../components/PatientFormDialog';
 import { MY_PATIENTS_QUERY } from '../graphql';
@@ -31,6 +32,7 @@ export function PatientsPage() {
   const [speciesFilter, setSpeciesFilter] = useState(ALL_SPECIES);
   const [genderFilter, setGenderFilter] = useState(ALL_GENDERS);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isClaimDialogOpen, setIsClaimDialogOpen] = useState(false);
   const [editPatient, setEditPatient] = useState<Patient | null>(null);
 
   const { data, loading, error, refetch } = useQuery<MyPatientsQueryResult>(
@@ -93,17 +95,32 @@ export function PatientsPage() {
           <h1 className="ph-page-header__title">{t('patients.title')}</h1>
           <p className="ph-page-header__subtitle">{t('patients.subtitle')}</p>
         </div>
-        <button
-          type="button"
-          className="ph-button ph-button--primary"
-          onClick={openAddDialog}
-          disabled={!canRegisterPatients}
-          title={
-            canRegisterPatients ? undefined : t('patients.addPatientDisabledHint')
-          }
-        >
-          {t('patients.addPatientAction')}
-        </button>
+        <div className="patients-header-actions">
+          <button
+            type="button"
+            className="ph-button ph-button--secondary"
+            onClick={() => setIsClaimDialogOpen(true)}
+            disabled={!canRegisterPatients}
+            title={
+              canRegisterPatients
+                ? t('patients.claim.actionHint')
+                : t('patients.addPatientDisabledHint')
+            }
+          >
+            {t('patients.claim.action')}
+          </button>
+          <button
+            type="button"
+            className="ph-button ph-button--primary"
+            onClick={openAddDialog}
+            disabled={!canRegisterPatients}
+            title={
+              canRegisterPatients ? undefined : t('patients.addPatientDisabledHint')
+            }
+          >
+            {t('patients.addPatientAction')}
+          </button>
+        </div>
       </header>
 
       {!isInitialLoading && !error && patients.length > 0 ? (
@@ -207,6 +224,12 @@ export function PatientsPage() {
           setIsAddDialogOpen(false);
           void navigate(`/patients/${patientId}`);
         }}
+      />
+      <ClaimPatientDialog
+        open={isClaimDialogOpen}
+        onClose={() => setIsClaimDialogOpen(false)}
+        clinics={clinics}
+        onClaimed={(patientId) => void navigate(`/patients/${patientId}`)}
       />
       <PatientFormDialog
         mode="edit"
