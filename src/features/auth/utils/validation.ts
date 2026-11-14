@@ -41,6 +41,7 @@ export function validateRegisterForm(input: {
   lastName: string;
   email: string;
   password: string;
+  licenseNumber: string;
 }): FieldErrors<RegisterField> {
   const errors: FieldErrors<RegisterField> = {};
 
@@ -62,6 +63,10 @@ export function validateRegisterForm(input: {
     errors.password = 'validation.passwordRequired';
   } else if (input.password.length < 8) {
     errors.password = 'validation.passwordMin';
+  }
+
+  if (!input.licenseNumber.trim()) {
+    errors.licenseNumber = 'validation.licenseNumberRequired';
   }
 
   return errors;

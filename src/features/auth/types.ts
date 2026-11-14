@@ -5,10 +5,13 @@ export type VeterinarianProfile = {
   licenseNumber?: string | null;
 };
 
+export type AccountApprovalStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+
 export type AuthUser = {
   id: string;
   email: string;
   role: string;
+  approvalStatus: AccountApprovalStatus;
   veterinarianProfile?: VeterinarianProfile | null;
 };
 
@@ -27,5 +30,5 @@ export type RegisterVeterinarianInput = {
   lastName: string;
   email: string;
   password: string;
-  licenseNumber?: string;
+  licenseNumber: string;
 };

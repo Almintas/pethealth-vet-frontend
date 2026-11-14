@@ -45,13 +45,23 @@ const en = {
     registerSubtitle: 'Register to start managing clinics in PetHealth Vet.',
     firstName: 'First name',
     lastName: 'Last name',
-    licenseNumberOptional: 'License number (optional)',
+    licenseNumber: 'Veterinary practice licence number',
     signUp: 'Create account',
     signingUp: 'Creating account…',
     noAccount: "Don't have an account?",
     createOne: 'Create one',
     haveAccount: 'Already have an account?',
     signInLink: 'Sign in',
+    pendingTitle: 'Account awaiting approval',
+    pendingText:
+      'Thanks for registering. The PetHealth team will verify your licence number and approve your account. You can then create a clinic and work with patients.',
+    rejectedTitle: 'Account not approved',
+    rejectedText:
+      'We could not approve your veterinarian account. If you believe this is a mistake, please contact PetHealth.',
+    accountLabel: 'Account',
+    licenseLabel: 'Licence',
+    checkAgain: 'Check again',
+    signOut: 'Sign out',
   },
   validation: {
     emailRequired: 'Email is required.',
@@ -60,6 +70,7 @@ const en = {
     passwordMin: 'Password must be at least 8 characters.',
     firstNameRequired: 'First name is required.',
     lastNameRequired: 'Last name is required.',
+    licenseNumberRequired: 'Licence number is required.',
     clinicNameRequired: 'Clinic name is required.',
   },
   errors: {

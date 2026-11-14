@@ -47,13 +47,23 @@ const lt = {
     registerSubtitle: 'Registruokitės, kad galėtumėte valdyti klinikas PetHealth Vet.',
     firstName: 'Vardas',
     lastName: 'Pavardė',
-    licenseNumberOptional: 'Licencijos numeris (nebūtina)',
+    licenseNumber: 'Veterinarijos praktikos licencijos numeris',
     signUp: 'Sukurti paskyrą',
     signingUp: 'Kuriama paskyra…',
     noAccount: 'Neturite paskyros?',
     createOne: 'Sukurkite',
     haveAccount: 'Jau turite paskyrą?',
     signInLink: 'Prisijunkite',
+    pendingTitle: 'Paskyra laukia patvirtinimo',
+    pendingText:
+      'Ačiū, kad užsiregistravote. PetHealth komanda patikrins jūsų licencijos numerį ir patvirtins paskyrą. Tada galėsite kurti kliniką ir dirbti su pacientais.',
+    rejectedTitle: 'Paskyra nepatvirtinta',
+    rejectedText:
+      'Nepavyko patvirtinti jūsų veterinaro paskyros. Jei manote, kad tai klaida, susisiekite su PetHealth.',
+    accountLabel: 'Paskyra',
+    licenseLabel: 'Licencija',
+    checkAgain: 'Tikrinti dar kartą',
+    signOut: 'Atsijungti',
   },
   validation: {
     emailRequired: 'El. paštas yra privalomas.',
@@ -62,6 +72,7 @@ const lt = {
     passwordMin: 'Slaptažodis turi būti bent 8 simbolių.',
     firstNameRequired: 'Vardas yra privalomas.',
     lastNameRequired: 'Pavardė yra privaloma.',
+    licenseNumberRequired: 'Licencijos numeris yra privalomas.',
     clinicNameRequired: 'Klinikos pavadinimas yra privalomas.',
   },
   errors: {

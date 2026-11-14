@@ -14,6 +14,7 @@ export const AUTH_USER_FIELDS = gql`
     id
     email
     role
+    approvalStatus
     veterinarianProfile {
       ...VeterinarianProfileFields
     }

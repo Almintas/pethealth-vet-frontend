@@ -128,3 +128,25 @@
     padding: var(--ph-space-5);
   }
 }
+
+.auth-pending__details {
+  display: grid;
+  gap: var(--ph-space-3);
+  margin: 0 0 var(--ph-space-5);
+}
+
+.auth-pending__details > div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--ph-space-4);
+}
+
+.auth-pending__details dt {
+  color: var(--ph-color-text-secondary);
+}
+
+.auth-pending__details dd {
+  margin: 0;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}

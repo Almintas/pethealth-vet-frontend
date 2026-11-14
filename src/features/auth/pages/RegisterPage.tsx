@@ -33,6 +33,7 @@ export function RegisterPage() {
       lastName,
       email,
       password,
+      licenseNumber,
     });
     setFieldErrors(validationErrors);
     if (hasFieldErrors(validationErrors)) {
@@ -46,9 +47,7 @@ export function RegisterPage() {
         lastName: lastName.trim(),
         email: email.trim().toLowerCase(),
         password,
-        ...(licenseNumber.trim()
-          ? { licenseNumber: licenseNumber.trim() }
-          : {}),
+        licenseNumber: licenseNumber.trim(),
       });
     } catch (error) {
       setFormError(getAuthErrorMessage(error, 'auth'));
@@ -119,10 +118,11 @@ export function RegisterPage() {
         <AuthFormField
           id="register-license"
           name="licenseNumber"
-          label={t('auth.licenseNumberOptional')}
+          label={t('auth.licenseNumber')}
           autoComplete="off"
           value={licenseNumber}
           onChange={(event) => setLicenseNumber(event.target.value)}
+          error={fieldErrors.licenseNumber}
           disabled={isSubmitting}
         />
 
