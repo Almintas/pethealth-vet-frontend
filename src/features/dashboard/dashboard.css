@@ -1,0 +1,192 @@
+.dashboard__sections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ph-space-6);
+}
+
+.dashboard-section--prominent .ph-card,
+.dashboard-section--prominent .ph-empty-state {
+  border-color: color-mix(in srgb, var(--ph-color-primary) 22%, var(--ph-color-border));
+}
+
+.dashboard-section__title {
+  margin-bottom: var(--ph-space-3);
+}
+
+.dashboard__split {
+  display: grid;
+  gap: var(--ph-space-6);
+}
+
+@media (min-width: 56rem) {
+  .dashboard__split {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.dashboard-appointment-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ph-space-3);
+}
+
+.dashboard-appointment-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ph-space-4);
+}
+
+.dashboard-appointment-card__main {
+  display: flex;
+  gap: var(--ph-space-4);
+  min-width: 0;
+}
+
+.dashboard-appointment-card__time {
+  flex-shrink: 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--ph-color-primary);
+  min-width: 5.5rem;
+}
+
+.dashboard-appointment-card__pet {
+  margin: 0 0 var(--ph-space-1);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.dashboard-appointment-card__meta {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--ph-color-text-secondary);
+}
+
+.dashboard-appointment-card__aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--ph-space-2);
+}
+
+.dashboard-appointment-card__action-placeholder {
+  font-size: 0.8125rem;
+  color: var(--ph-color-text-muted);
+}
+
+.dashboard-quick-actions {
+  display: grid;
+  gap: var(--ph-space-3);
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+}
+
+.dashboard-quick-actions__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--ph-space-2);
+  text-decoration: none;
+  color: inherit;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.dashboard-quick-actions__card--link:hover {
+  border-color: color-mix(in srgb, var(--ph-color-primary) 28%, var(--ph-color-border));
+  background: var(--ph-color-surface-muted);
+}
+
+.dashboard-quick-actions__card--disabled {
+  opacity: 0.85;
+  cursor: not-allowed;
+}
+
+.dashboard-quick-actions__label {
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.dashboard-quick-actions__description {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--ph-color-text-secondary);
+}
+
+.dashboard-quick-actions__badge {
+  margin-top: var(--ph-space-1);
+  padding: 0.125rem 0.5rem;
+  border-radius: var(--ph-radius-full);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ph-color-text-muted);
+  background: var(--ph-color-neutral-soft);
+}
+
+.dashboard-appointment-card__date {
+  display: block;
+  margin-bottom: 0.125rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ph-color-text-secondary);
+  white-space: nowrap;
+}
+
+.dashboard-recent-patients {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.dashboard-recent-patients li + li {
+  border-top: 1px solid var(--ph-color-border);
+}
+
+.dashboard-recent-patients__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ph-space-3);
+  padding: 0.75rem var(--ph-space-4);
+  color: inherit;
+  text-decoration: none;
+}
+
+.dashboard-recent-patients__row:hover {
+  background: var(--ph-color-surface-muted);
+}
+
+.dashboard-recent-patients__row:focus-visible {
+  outline: none;
+  box-shadow: inset var(--ph-focus-ring);
+}
+
+.dashboard-recent-patients__main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.dashboard-recent-patients__name {
+  font-weight: 600;
+  color: var(--ph-color-text);
+}
+
+.dashboard-recent-patients__meta,
+.dashboard-recent-patients__owner {
+  font-size: 0.8125rem;
+  color: var(--ph-color-text-secondary);
+}
+
+.dashboard-recent-patients__owner {
+  flex-shrink: 0;
+  text-align: right;
+}

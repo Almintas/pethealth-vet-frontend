@@ -1,0 +1,20 @@
+.profile-card__grid {
+  margin: 0;
+  display: grid;
+  gap: var(--ph-space-4);
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+}
+
+.profile-card__grid dt {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ph-color-text-muted);
+}
+
+.profile-card__grid dd {
+  margin: var(--ph-space-1) 0 0;
+  font-size: 1rem;
+  color: var(--ph-color-text);
+}

@@ -1,0 +1,30 @@
+.my-clinic-card__details {
+  margin: 0;
+  display: grid;
+  gap: var(--ph-space-4);
+}
+
+.my-clinic-card__details dt {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ph-color-text-muted);
+}
+
+.my-clinic-card__details dd {
+  margin: var(--ph-space-1) 0 0;
+  color: var(--ph-color-text-secondary);
+}
+
+.my-clinic-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ph-space-4);
+}
+
+.my-clinic-list__item-title {
+  margin: 0 0 var(--ph-space-3);
+  font-size: 1rem;
+  font-weight: 600;
+}
