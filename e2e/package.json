@@ -1,0 +1,12 @@
+{
+  "name": "pethealth-e2e",
+  "private": true,
+  "type": "module",
+  "description": "Browser end-to-end tests across both PetHealth apps (run in CI; see README.md)",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1"
+  }
+}
