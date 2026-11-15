@@ -149,6 +149,17 @@ export function AdminVeterinariansPage() {
                     <dt>{t('admin.registered')}</dt>
                     <dd>{dateFormatter.format(new Date(account.registeredAt))}</dd>
                   </div>
+                  {account.decidedAt ? (
+                    <div>
+                      <dt>{t('admin.decided')}</dt>
+                      <dd>
+                        {t('admin.decidedBy', {
+                          who: account.decidedBy ?? t('admin.unknownAdmin'),
+                          date: dateFormatter.format(new Date(account.decidedAt)),
+                        })}
+                      </dd>
+                    </div>
+                  ) : null}
                 </dl>
               </div>
               <div className="admin-list__actions">

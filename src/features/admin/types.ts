@@ -12,6 +12,8 @@ export type AdminVeterinarian = {
   lastName?: string | null;
   licenseNumber?: string | null;
   registeredAt: string;
+  decidedBy?: string | null;
+  decidedAt?: string | null;
 };
 
 export type AdminVeterinariansQueryResult = {

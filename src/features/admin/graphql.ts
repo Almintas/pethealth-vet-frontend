@@ -10,6 +10,8 @@ export const ADMIN_VETERINARIAN_FIELDS = gql`
     lastName
     licenseNumber
     registeredAt
+    decidedBy
+    decidedAt
   }
 `;
 
