@@ -73,7 +73,7 @@ test('approved vet creates a clinic from the dashboard prompt', async () => {
   await expect(dialog).toBeHidden();
 
   await expect(vetPage.getByRole('heading', { name: clinicName, level: 1 })).toBeVisible();
-  await expect(vetPage.getByRole('heading', { name: 'Team' })).toBeVisible();
+  await expect(vetPage.getByRole('heading', { name: 'Team', exact: true })).toBeVisible();
 });
 
 test('owner registers and adds a pet', async () => {
