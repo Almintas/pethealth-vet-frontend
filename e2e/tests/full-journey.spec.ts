@@ -39,6 +39,27 @@ test.beforeAll(async ({ browser }) => {
   ownerPage = await newPage(browser);
 });
 
+// The report artifact is not always reachable, so print what each person
+// sees when a step fails.
+test.afterEach(async ({}, testInfo) => {
+  if (testInfo.status === testInfo.expectedStatus) {
+    return;
+  }
+  for (const [who, page] of [
+    ['vet', vetPage],
+    ['owner', ownerPage],
+  ] as const) {
+    if (!page || page.isClosed()) {
+      continue;
+    }
+    const snapshot = await page
+      .locator('body')
+      .ariaSnapshot({ timeout: 5_000 })
+      .catch((error: unknown) => `(no snapshot: ${String(error)})`);
+    console.log(`\n----- ${who} page at ${page.url()} -----\n${snapshot.slice(0, 6000)}`);
+  }
+});
+
 test.afterAll(async () => {
   await vetPage?.context().close();
   await ownerPage?.context().close();
@@ -87,7 +108,7 @@ test('owner registers and adds a pet', async () => {
 
   await ownerPage.goto(`${OWNER_APP}/pets`);
   await ownerPage.getByRole('button', { name: 'Add pet' }).first().click();
-  await ownerPage.getByLabel('Name', { exact: true }).fill(petName);
+  await ownerPage.locator('input[name="name"]').fill(petName);
   const species = ownerPage.getByRole('combobox', { name: /Species/ });
   await species.fill('Cat');
   await species.press('Tab');
