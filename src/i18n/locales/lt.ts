@@ -26,6 +26,7 @@ const lt = {
     dashboard: 'Skydelis',
     clinics: 'Klinikos',
     myClinic: 'Mano klinika',
+    admin: 'Veterinarų patvirtinimas',
     patients: 'Pacientai',
     appointments: 'Vizitai',
     medicalRecords: 'Medicininiai įrašai',
@@ -108,6 +109,11 @@ const lt = {
     },
   },
   dashboard: {
+    setupClinic: {
+      title: 'Sukurkite kliniką, kad galėtumėte pradėti',
+      text: 'Pacientai, vizitai ir įrašai priklauso klinikai. Tai užtruks minutę.',
+      action: 'Sukurti kliniką',
+    },
     eyebrow: 'Apžvalga',
     greeting: {
       morning: 'Labas rytas, {{name}}',
@@ -251,6 +257,18 @@ const lt = {
     breedNames: breedNamesLt,
   },
   clinics: {
+    create: {
+      action: 'Sukurti kliniką',
+      anotherAction: '+ Nauja klinika',
+      title: 'Sukurti kliniką',
+      description:
+        'Įveskite klinikos duomenis. Savininkai juos matys, kai suteiks klinikai prieigą prie savo augintinio. Jūs tapsite šios klinikos nariu.',
+      submit: 'Sukurti kliniką',
+      submitting: 'Kuriama…',
+      emptyTitle: 'Sukurkite savo kliniką',
+      emptyDescription:
+        'Kad galėtumėte registruoti pacientus ir vizitus, pirmiausia sukurkite kliniką. Jei dirbate esamoje klinikoje, paprašykite jos administratoriaus jus pakviesti.',
+    },
     eyebrow: 'Mano klinika',
     pageTitle: 'Mano klinika',
     workspaceDescription: 'Jūsų veterinarijos klinika ir profesinė darbo erdvė.',
@@ -269,7 +287,38 @@ const lt = {
       VETERINARIAN: 'Veterinaras',
       CLINIC_ADMIN: 'Klinikos administratorius',
       RECEPTIONIST: 'Registratūra',
+      PLATFORM_ADMIN: 'PetHealth administratorius',
     },
+  },
+  admin: {
+    eyebrow: 'Administravimas',
+    title: 'Veterinarų patvirtinimas',
+    subtitle:
+      'Patikrinkite licencijos numerį oficialiame veterinarijos gydytojų registre ir tik tada patvirtinkite paskyrą.',
+    filterLabel: 'Rodyti paskyras',
+    filters: {
+      PENDING: 'Laukia',
+      APPROVED: 'Patvirtinti',
+      REJECTED: 'Atmesti',
+      ALL: 'Visi',
+    },
+    status: {
+      PENDING: 'Laukia',
+      APPROVED: 'Patvirtinta',
+      REJECTED: 'Atmesta',
+    },
+    licence: 'Licencija',
+    email: 'El. paštas',
+    registered: 'Užsiregistravo',
+    unnamed: 'Be vardo',
+    approve: 'Patvirtinti',
+    reject: 'Atmesti',
+    revokeApproval: 'Atšaukti patvirtinimą',
+    rejectConfirm:
+      'Atmesti veterinaro {{name}} paskyrą? Jis nebegalės dirbti su klinikomis ir pacientais.',
+    emptyTitle: 'Paskyrų nėra',
+    emptyPendingTitle: 'Nėra laukiančių paskyrų',
+    emptyPendingDescription: 'Kai užsiregistruos naujas veterinaras, jis atsiras čia.',
   },
   appointments: {
     eyebrow: 'Vizitai',

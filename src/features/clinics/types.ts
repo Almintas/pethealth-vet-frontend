@@ -11,3 +11,17 @@ export type Clinic = {
 export type MyClinicsQueryResult = {
   myClinics: Clinic[];
 };
+
+export type CreateClinicInput = {
+  name: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+};
+
+export type CreateClinicMutationResult = {
+  createClinic: Clinic;
+};
+
+/** Roles the API allows to create a clinic (receptionists cannot). */
+export const CLINIC_CREATOR_ROLES = ['VETERINARIAN', 'CLINIC_ADMIN'] as const;

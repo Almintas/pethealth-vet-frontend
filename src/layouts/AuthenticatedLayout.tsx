@@ -2,6 +2,7 @@ import { useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink, Outlet, useNavigate } from 'react-router';
 import { BrandMark } from '../components/BrandMark';
+import { ADMIN_HOME, PLATFORM_ADMIN_ROLE } from '../features/admin/types';
 import { useAuth } from '../features/auth';
 import { SidebarUserMenu } from './SidebarUserMenu';
 import './authenticated-layout.css';
@@ -10,7 +11,8 @@ type NavigationLabelKey =
   | 'navigation.dashboard'
   | 'navigation.patients'
   | 'navigation.appointments'
-  | 'navigation.myClinic';
+  | 'navigation.myClinic'
+  | 'navigation.admin';
 
 type NavItem =
   | { kind: 'divider' }
@@ -76,9 +78,25 @@ const navItems: NavItem[] = [
   },
 ];
 
+/** Platform admins only see their admin tools (they have no clinical access). */
+const adminNavItems: NavItem[] = [
+  {
+    kind: 'link',
+    to: ADMIN_HOME,
+    labelKey: 'navigation.admin',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6l-8-3Z" />
+        <path d="m9 12 2 2 4-4" />
+      </svg>
+    ),
+  },
+];
+
 export function AuthenticatedLayout() {
   const { t } = useTranslation();
   const { user, logout } = useAuth();
+  const visibleNavItems = user?.role === PLATFORM_ADMIN_ROLE ? adminNavItems : navItems;
   const navigate = useNavigate();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
@@ -138,7 +156,7 @@ export function AuthenticatedLayout() {
         </div>
 
         <nav className="authenticated-layout__nav" aria-label={t('common.mainNav')}>
-          {navItems.map((item, index) => {
+          {visibleNavItems.map((item, index) => {
             if (item.kind === 'divider') {
               return (
                 <hr

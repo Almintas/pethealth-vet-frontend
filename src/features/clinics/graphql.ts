@@ -20,3 +20,12 @@ export const MY_CLINICS_QUERY = gql`
   }
   ${CLINIC_FIELDS}
 `;
+
+export const CREATE_CLINIC_MUTATION = gql`
+  mutation CreateClinic($input: CreateClinicInput!) {
+    createClinic(input: $input) {
+      ...ClinicFields
+    }
+  }
+  ${CLINIC_FIELDS}
+`;

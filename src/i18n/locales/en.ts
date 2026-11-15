@@ -24,6 +24,7 @@ const en = {
     dashboard: 'Dashboard',
     clinics: 'Clinics',
     myClinic: 'My clinic',
+    admin: 'Vet approvals',
     patients: 'Patients',
     appointments: 'Appointments',
     medicalRecords: 'Medical records',
@@ -106,6 +107,11 @@ const en = {
     },
   },
   dashboard: {
+    setupClinic: {
+      title: 'Create a clinic to get started',
+      text: 'Patients, appointments and records belong to a clinic. It takes a minute.',
+      action: 'Create clinic',
+    },
     eyebrow: 'Overview',
     greeting: {
       morning: 'Good morning, {{name}}',
@@ -245,6 +251,18 @@ const en = {
     breedNames: {},
   },
   clinics: {
+    create: {
+      action: 'Create clinic',
+      anotherAction: '+ New clinic',
+      title: 'Create a clinic',
+      description:
+        'Enter your clinic details. Owners see them when they give the clinic access to their pet. You will become a member of this clinic.',
+      submit: 'Create clinic',
+      submitting: 'Creating…',
+      emptyTitle: 'Create your clinic',
+      emptyDescription:
+        'Create a clinic before registering patients and appointments. If you work at an existing clinic, ask its administrator to invite you.',
+    },
     eyebrow: 'My clinic',
     pageTitle: 'My clinic',
     workspaceDescription: 'Your veterinary clinic and professional workspace.',
@@ -263,7 +281,38 @@ const en = {
       VETERINARIAN: 'Veterinarian',
       CLINIC_ADMIN: 'Clinic administrator',
       RECEPTIONIST: 'Receptionist',
+      PLATFORM_ADMIN: 'PetHealth admin',
     },
+  },
+  admin: {
+    eyebrow: 'Administration',
+    title: 'Veterinarian approvals',
+    subtitle:
+      'Check the licence number against the official register of veterinarians before approving an account.',
+    filterLabel: 'Show accounts',
+    filters: {
+      PENDING: 'Pending',
+      APPROVED: 'Approved',
+      REJECTED: 'Rejected',
+      ALL: 'All',
+    },
+    status: {
+      PENDING: 'Pending',
+      APPROVED: 'Approved',
+      REJECTED: 'Rejected',
+    },
+    licence: 'Licence',
+    email: 'Email',
+    registered: 'Registered',
+    unnamed: 'No name',
+    approve: 'Approve',
+    reject: 'Reject',
+    revokeApproval: 'Revoke approval',
+    rejectConfirm:
+      'Reject {{name}}’s account? They will no longer be able to work with clinics and patients.',
+    emptyTitle: 'No accounts',
+    emptyPendingTitle: 'No pending accounts',
+    emptyPendingDescription: 'New veterinarian registrations will appear here.',
   },
   appointments: {
     eyebrow: 'Appointments',
