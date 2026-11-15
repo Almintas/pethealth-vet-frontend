@@ -7,6 +7,7 @@ export const CLINIC_FIELDS = gql`
     email
     phone
     address
+    myRole
     createdAt
     updatedAt
   }
@@ -15,6 +16,15 @@ export const CLINIC_FIELDS = gql`
 export const MY_CLINICS_QUERY = gql`
   query MyClinics {
     myClinics {
+      ...ClinicFields
+    }
+  }
+  ${CLINIC_FIELDS}
+`;
+
+export const CREATE_CLINIC_MUTATION = gql`
+  mutation CreateClinic($input: CreateClinicInput!) {
+    createClinic(input: $input) {
       ...ClinicFields
     }
   }

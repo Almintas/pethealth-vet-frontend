@@ -50,7 +50,13 @@ export function MyClinicInfoCard({ clinic, user }: MyClinicInfoCardProps) {
         ) : null}
         <div>
           <dt>{t('clinics.yourRole')}</dt>
-          <dd>{user?.role ? formatRole(user.role, t) : t('common.notProvided')}</dd>
+          <dd>
+            {clinic.myRole
+              ? t(`clinics.memberRoles.${clinic.myRole}`)
+              : user?.role
+                ? formatRole(user.role, t)
+                : t('common.notProvided')}
+          </dd>
         </div>
         <div>
           <dt>{t('clinics.membership')}</dt>

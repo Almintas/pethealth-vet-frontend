@@ -8,6 +8,9 @@ import { useAuth, getVeterinarianFirstName } from '../../auth';
 import {
   DashboardAppointmentList,
 } from '../components/DashboardAppointmentList';
+import { Link } from 'react-router';
+import { MY_CLINICS_QUERY } from '../../clinics/graphql';
+import type { MyClinicsQueryResult } from '../../clinics/types';
 import { MY_PATIENTS_QUERY } from '../../patients/graphql';
 import type { MyPatientsQueryResult } from '../../patients/types';
 import { DashboardQuickActions } from '../components/DashboardQuickActions';
@@ -38,6 +41,10 @@ export function DashboardPage() {
     [patientsData?.myPatients],
   );
   const greetingPeriod = getGreetingPeriod();
+  const { data: clinicsData } = useQuery<MyClinicsQueryResult>(MY_CLINICS_QUERY, {
+    fetchPolicy: 'cache-and-network',
+  });
+  const hasNoClinic = clinicsData !== undefined && clinicsData.myClinics.length === 0;
 
   return (
     <div className="ph-page dashboard">
@@ -50,6 +57,18 @@ export function DashboardPage() {
           <p className="ph-page-header__subtitle">{t('dashboard.subtitle')}</p>
         </div>
       </header>
+
+      {hasNoClinic ? (
+        <div className="dashboard__setup-callout" role="status">
+          <div>
+            <p className="dashboard__setup-title">{t('dashboard.setupClinic.title')}</p>
+            <p className="dashboard__setup-text">{t('dashboard.setupClinic.text')}</p>
+          </div>
+          <Link className="ph-button ph-button--primary" to="/clinics">
+            {t('dashboard.setupClinic.action')}
+          </Link>
+        </div>
+      ) : null}
 
       <div className="dashboard__sections">
         <DashboardSection

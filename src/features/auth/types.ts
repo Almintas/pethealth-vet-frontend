@@ -20,6 +20,14 @@ export type AuthPayload = {
   user: AuthUser;
 };
 
+export type RegisterWithInvitationInput = {
+  token: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  licenseNumber?: string;
+};
+
 export type LoginInput = {
   email: string;
   password: string;

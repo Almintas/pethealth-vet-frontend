@@ -1,5 +1,8 @@
 import { Navigate, Route, Routes } from 'react-router';
+import { AdminVeterinariansPage } from '../features/admin/pages/AdminVeterinariansPage';
+import { ADMIN_HOME } from '../features/admin/types';
 import { LoginPage } from '../features/auth/pages/LoginPage';
+import { InviteAcceptPage } from '../features/clinic-team/pages/InviteAcceptPage';
 import { RegisterPage } from '../features/auth/pages/RegisterPage';
 import { ClinicsPage } from '../features/clinics/pages/ClinicsPage';
 import { AppointmentsPage } from '../features/appointments/pages/AppointmentsPage';
@@ -16,12 +19,23 @@ import { AuthenticatedLayout } from '../layouts/AuthenticatedLayout';
 import { MainLayout } from '../layouts/MainLayout';
 import { ProtectedRoute } from './ProtectedRoute';
 import { PublicRoute } from './PublicRoute';
+import { AdminRoute, ClinicalRoute } from './RoleRoutes';
 import { RootRedirect } from './RootRedirect';
 
 export function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<RootRedirect />} />
+
+      {/* Reachable signed in or out: the emailed link must always work. */}
+      <Route
+        path="/invite"
+        element={
+          <MainLayout>
+            <InviteAcceptPage />
+          </MainLayout>
+        }
+      />
 
       <Route element={<PublicRoute />}>
         <Route
@@ -44,27 +58,32 @@ export function AppRoutes() {
 
       <Route element={<ProtectedRoute />}>
         <Route element={<AuthenticatedLayout />}>
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/patients" element={<PatientsPage />} />
-          <Route path="/patients/:id" element={<PatientProfilePage />} />
-          <Route
-            path="/patients/:id/medical-history"
-            element={<PatientMedicalHistoryPage />}
-          />
-          <Route
-            path="/patients/:id/medications"
-            element={<PatientMedicationsPage />}
-          />
-          <Route
-            path="/patients/:id/vaccinations"
-            element={<PatientVaccinationsPage />}
-          />
-          <Route
-            path="/patients/:id/appointments"
-            element={<PatientAppointmentsPage />}
-          />
-          <Route path="/appointments" element={<AppointmentsPage />} />
-          <Route path="/clinics" element={<ClinicsPage />} />
+          <Route element={<AdminRoute />}>
+            <Route path={ADMIN_HOME} element={<AdminVeterinariansPage />} />
+          </Route>
+          <Route element={<ClinicalRoute />}>
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/patients" element={<PatientsPage />} />
+            <Route path="/patients/:id" element={<PatientProfilePage />} />
+            <Route
+              path="/patients/:id/medical-history"
+              element={<PatientMedicalHistoryPage />}
+            />
+            <Route
+              path="/patients/:id/medications"
+              element={<PatientMedicationsPage />}
+            />
+            <Route
+              path="/patients/:id/vaccinations"
+              element={<PatientVaccinationsPage />}
+            />
+            <Route
+              path="/patients/:id/appointments"
+              element={<PatientAppointmentsPage />}
+            />
+            <Route path="/appointments" element={<AppointmentsPage />} />
+            <Route path="/clinics" element={<ClinicsPage />} />
+          </Route>
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/settings" element={<SettingsPage />} />
         </Route>

@@ -3,6 +3,7 @@ import {
   LOGIN_MUTATION,
   ME_QUERY,
   REGISTER_VETERINARIAN_MUTATION,
+  REGISTER_WITH_INVITATION_MUTATION,
 } from './graphql';
 import {
   clearAccessToken,
@@ -14,6 +15,7 @@ import type {
   AuthUser,
   LoginInput,
   RegisterVeterinarianInput,
+  RegisterWithInvitationInput,
 } from './types';
 
 type LoginMutationResult = {
@@ -63,6 +65,31 @@ export async function registerVeterinarian(
     email: input.email,
     password: input.password,
   });
+}
+
+/** Creates an account from a clinic invitation, joins the clinic and signs in. */
+export async function registerWithInvitation(
+  client: ApolloClient,
+  input: RegisterWithInvitationInput,
+): Promise<AuthUser> {
+  const { data } = await client.mutate<{
+    registerWithInvitation: { accessToken: string };
+  }>({
+    mutation: REGISTER_WITH_INVITATION_MUTATION,
+    variables: { input },
+  });
+
+  const accessToken = data?.registerWithInvitation?.accessToken;
+  if (!accessToken) {
+    throw new Error('Registration failed: missing authentication payload.');
+  }
+  setAccessToken(accessToken);
+
+  const user = await fetchCurrentUser(client);
+  if (!user) {
+    throw new Error('Registration failed: could not load your profile.');
+  }
+  return user;
 }
 
 export async function fetchCurrentUser(

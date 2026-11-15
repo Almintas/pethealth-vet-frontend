@@ -190,3 +190,27 @@
   flex-shrink: 0;
   text-align: right;
 }
+
+.dashboard__setup-callout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ph-space-3) var(--ph-space-4);
+  margin-bottom: var(--ph-space-5);
+  padding: var(--ph-space-4) var(--ph-space-5);
+  background: var(--ph-color-primary-soft);
+  border: 1px solid var(--ph-color-primary);
+  border-radius: var(--ph-radius-lg);
+}
+
+.dashboard__setup-title {
+  margin: 0;
+  font-weight: 700;
+}
+
+.dashboard__setup-text {
+  margin: var(--ph-space-1) 0 0;
+  font-size: 0.875rem;
+  color: var(--ph-color-text-secondary);
+}

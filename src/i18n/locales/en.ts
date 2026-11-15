@@ -24,6 +24,7 @@ const en = {
     dashboard: 'Dashboard',
     clinics: 'Clinics',
     myClinic: 'My clinic',
+    admin: 'Vet approvals',
     patients: 'Patients',
     appointments: 'Appointments',
     medicalRecords: 'Medical records',
@@ -106,6 +107,11 @@ const en = {
     },
   },
   dashboard: {
+    setupClinic: {
+      title: 'Create a clinic to get started',
+      text: 'Patients, appointments and records belong to a clinic. It takes a minute.',
+      action: 'Create clinic',
+    },
     eyebrow: 'Overview',
     greeting: {
       morning: 'Good morning, {{name}}',
@@ -245,6 +251,18 @@ const en = {
     breedNames: {},
   },
   clinics: {
+    create: {
+      action: 'Create clinic',
+      anotherAction: '+ New clinic',
+      title: 'Create a clinic',
+      description:
+        'Enter your clinic details. Owners see them when they give the clinic access to their pet. You will become a member of this clinic.',
+      submit: 'Create clinic',
+      submitting: 'Creating…',
+      emptyTitle: 'Create your clinic',
+      emptyDescription:
+        'Create a clinic before registering patients and appointments. If you work at an existing clinic, ask its administrator to invite you.',
+    },
     eyebrow: 'My clinic',
     pageTitle: 'My clinic',
     workspaceDescription: 'Your veterinary clinic and professional workspace.',
@@ -263,7 +281,101 @@ const en = {
       VETERINARIAN: 'Veterinarian',
       CLINIC_ADMIN: 'Clinic administrator',
       RECEPTIONIST: 'Receptionist',
+      PLATFORM_ADMIN: 'PetHealth admin',
     },
+    memberRoles: {
+      ADMIN: 'Clinic administrator',
+      VETERINARIAN: 'Veterinarian',
+      RECEPTIONIST: 'Receptionist',
+    },
+  },
+  clinicTeam: {
+    title: 'Team',
+    introAdmin: 'Invite colleagues by email. Everyone sees only this clinic’s patients.',
+    introMember: 'People working at this clinic. The clinic administrator invites members.',
+    you: 'you',
+    awaitingApproval: 'awaiting PetHealth approval',
+    remove: 'Remove',
+    removeConfirm: 'Remove {{name}} from {{clinic}}? They will no longer see the clinic’s patients.',
+    inviteTitle: 'Invite to the team',
+    role: 'Role',
+    invite: 'Send invitation',
+    inviting: 'Sending…',
+    roleHints: {
+      VETERINARIAN:
+        'Veterinarians write records. They will need a licence number and PetHealth approval.',
+      RECEPTIONIST:
+        'Receptionists manage patients and appointments. Approved at once, no licence needed.',
+      ADMIN:
+        'Administrators can invite and remove members. They also need a licence and PetHealth approval.',
+    },
+    inviteSent: 'Invitation sent to {{email}}. The link is valid for 7 days.',
+    inviteNotEmailed:
+      'Invitation created, but no email was sent. Send this link to {{email}} yourself.',
+    inviteLink: 'Invitation link',
+    copyLink: 'Copy link',
+    copied: 'Copied',
+    pendingTitle: 'Pending invitations',
+    expires: 'valid until {{date}}',
+    cancelInvite: 'Cancel invitation',
+    errors: {
+      wrongEmail:
+        'This invitation is for a different email address. Sign in with that email to accept it.',
+      alreadyMember: 'This person is already a member of the clinic.',
+      lastAdmin:
+        'A clinic needs at least one administrator. Invite another administrator first.',
+      adminOnly: 'Only clinic administrators can manage the team.',
+    },
+  },
+  invite: {
+    title: 'Invitation to join a clinic',
+    subtitle: '{{clinic}} invites you to join as {{role}} ({{email}}).',
+    accept: 'Join the clinic',
+    accepting: 'Joining…',
+    signInToAccept: 'You already have an account with this email. Sign in to accept the invitation.',
+    createAccount: 'Create your account for {{email}}.',
+    createAndJoin: 'Create account and join',
+    licenceNote: 'You can work with patients once PetHealth has verified your licence number.',
+    wrongAccount:
+      'You are signed in as {{current}}, but the invitation is for {{invited}}. Sign out and continue with the invited email.',
+    signOutAndContinue: 'Sign out and continue',
+    unavailableTitle: 'Invitation unavailable',
+    states: {
+      EXPIRED: 'This invitation link has expired. Ask the clinic to send a new one.',
+      USED: 'This invitation has already been used. Sign in to your account.',
+      REVOKED: 'The clinic cancelled this invitation.',
+      VALID: 'The invitation is valid.',
+    },
+  },
+  admin: {
+    eyebrow: 'Administration',
+    title: 'Veterinarian approvals',
+    subtitle:
+      'Check the licence number against the official register of veterinarians before approving an account.',
+    filterLabel: 'Show accounts',
+    filters: {
+      PENDING: 'Pending',
+      APPROVED: 'Approved',
+      REJECTED: 'Rejected',
+      ALL: 'All',
+    },
+    status: {
+      PENDING: 'Pending',
+      APPROVED: 'Approved',
+      REJECTED: 'Rejected',
+    },
+    licence: 'Licence',
+    email: 'Email',
+    registered: 'Registered',
+    unnamed: 'No name',
+    approve: 'Approve',
+    reject: 'Reject',
+    revokeApproval: 'Revoke approval',
+    rejectConfirm:
+      'Reject {{name}}’s account? They will no longer be able to work with clinics and patients.',
+    emptyTitle: 'No accounts',
+    emptyPendingTitle: 'No pending accounts',
+    emptyPendingDescription: 'New veterinarian registrations will appear here.',
   },
   appointments: {
     eyebrow: 'Appointments',

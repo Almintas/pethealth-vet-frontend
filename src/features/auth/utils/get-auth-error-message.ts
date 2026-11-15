@@ -107,6 +107,24 @@ function mapKnownBackendMessage(message: string): string | null {
   ) {
     return i18n.t('errors.invalidCredentials');
   }
+  if (normalized.includes('invitation link is invalid or has expired')) {
+    return i18n.t('invite.states.EXPIRED');
+  }
+  if (normalized.includes('invitation was sent to a different email')) {
+    return i18n.t('clinicTeam.errors.wrongEmail');
+  }
+  if (normalized.includes('already a member of the clinic')) {
+    return i18n.t('clinicTeam.errors.alreadyMember');
+  }
+  if (normalized.includes('at least one administrator')) {
+    return i18n.t('clinicTeam.errors.lastAdmin');
+  }
+  if (normalized.includes('only clinic administrators')) {
+    return i18n.t('clinicTeam.errors.adminOnly');
+  }
+  if (normalized.includes('licence number is required to join')) {
+    return i18n.t('validation.licenseNumberRequired');
+  }
   if (normalized.includes('owner account with this email already exists')) {
     return i18n.t('patients.claim.ownerHasAccount');
   }
