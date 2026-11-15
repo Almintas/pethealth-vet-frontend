@@ -81,8 +81,7 @@ test('owner registers and adds a pet', async () => {
   await ownerPage.getByLabel('First name').fill('Jane');
   await ownerPage.getByLabel('Last name').fill('Owner');
   await ownerPage.getByLabel('Email').fill(ownerEmail);
-  await ownerPage.getByLabel('Password', { exact: true }).fill(PASSWORD);
-  await ownerPage.getByLabel('Confirm password').fill(PASSWORD);
+  await ownerPage.getByLabel('Password').fill(PASSWORD);
   await ownerPage.getByRole('button', { name: 'Sign up' }).click();
   await expect(ownerPage).not.toHaveURL(/\/register/);
 
