@@ -42,6 +42,13 @@ function mapCredentialFailure(error: unknown): string | null {
   ) {
     return i18n.t('errors.invalidCredentials');
   }
+  // Two-factor failures are also 401s and must not read as "session expired".
+  if (messages.some((message) => message.includes('code is not valid'))) {
+    return i18n.t('twoFactor.errors.invalidCode');
+  }
+  if (messages.some((message) => message.includes('sign-in has expired'))) {
+    return i18n.t('twoFactor.errors.expired');
+  }
   return null;
 }
 
@@ -106,6 +113,15 @@ function mapKnownBackendMessage(message: string): string | null {
     normalized === 'unauthorized'
   ) {
     return i18n.t('errors.invalidCredentials');
+  }
+  if (normalized.includes('code is not valid')) {
+    return i18n.t('twoFactor.errors.invalidCode');
+  }
+  if (normalized.includes('sign-in has expired')) {
+    return i18n.t('twoFactor.errors.expired');
+  }
+  if (normalized.includes('too many attempts')) {
+    return i18n.t('errors.tooManyAttempts');
   }
   if (normalized.includes('invitation link is invalid or has expired')) {
     return i18n.t('invite.states.EXPIRED');

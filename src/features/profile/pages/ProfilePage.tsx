@@ -6,6 +6,7 @@ import { useAuth } from '../../auth';
 import { ME_QUERY } from '../../auth/graphql';
 import type { AuthUser } from '../../auth/types';
 import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
+import { TwoFactorCard } from '../components/TwoFactorCard';
 import './profile-page.css';
 
 type MeQueryResult = {
@@ -74,6 +75,8 @@ export function ProfilePage() {
           </dl>
         </section>
       ) : null}
+
+      {user ? <TwoFactorCard /> : null}
     </div>
   );
 }

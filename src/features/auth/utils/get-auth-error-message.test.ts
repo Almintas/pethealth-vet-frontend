@@ -51,4 +51,16 @@ describe('getUserFacingErrorMessage', () => {
   ])('translates the team error "%s"', (message, key) => {
     expect(getUserFacingErrorMessage(graphQLError(message, 'BAD_REQUEST'))).toBe(t(key));
   });
+
+  it('reports a wrong two-factor code as such, not as an expired session', () => {
+    expect(
+      getUserFacingErrorMessage(
+        graphQLError(
+          'That code is not valid. Check the time on your phone and try again.',
+          'UNAUTHENTICATED',
+        ),
+        'auth',
+      ),
+    ).toBe(t('twoFactor.errors.invalidCode'));
+  });
 });

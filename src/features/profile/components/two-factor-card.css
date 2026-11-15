@@ -1,0 +1,101 @@
+.two-factor-card {
+  margin-top: var(--ph-space-5);
+}
+
+.two-factor-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ph-space-3);
+  margin-bottom: var(--ph-space-4);
+}
+
+.two-factor-card__title {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 700;
+}
+
+.two-factor-card__intro,
+.two-factor-card__muted {
+  margin: var(--ph-space-1) 0 0;
+  max-width: 40rem;
+  font-size: 0.875rem;
+  color: var(--ph-color-text-secondary);
+}
+
+.two-factor-card__strong {
+  margin: 0;
+  font-weight: 700;
+}
+
+.two-factor-card__off {
+  color: var(--ph-color-text-secondary);
+  background: var(--ph-color-surface-muted);
+}
+
+.two-factor-card__setup {
+  display: grid;
+  gap: var(--ph-space-4);
+}
+
+.two-factor-card__steps {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: var(--ph-space-2);
+  font-size: 0.9375rem;
+}
+
+.two-factor-card__key {
+  display: block;
+  margin: var(--ph-space-2) 0;
+  padding: var(--ph-space-2) var(--ph-space-3);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  word-break: break-all;
+  background: var(--ph-color-surface-muted);
+  border: 1px solid var(--ph-color-border);
+  border-radius: var(--ph-radius-md);
+}
+
+.two-factor-card__code-field {
+  max-width: 14rem;
+}
+
+.two-factor-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ph-space-2);
+}
+
+.two-factor-card__codes {
+  display: grid;
+  gap: var(--ph-space-2);
+  margin-bottom: var(--ph-space-4);
+  padding: var(--ph-space-4);
+  background: var(--ph-color-warning-soft);
+  border: 1px solid var(--ph-color-warning-text);
+  border-radius: var(--ph-radius-md);
+}
+
+.two-factor-card__code-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+  gap: var(--ph-space-2);
+  margin: var(--ph-space-2) 0;
+  padding: 0;
+  list-style: none;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.two-factor-card__danger {
+  color: var(--ph-color-danger-text);
+}
+
+.two-factor-card__danger-solid {
+  background: var(--ph-color-danger-text);
+  border-color: var(--ph-color-danger-text);
+}

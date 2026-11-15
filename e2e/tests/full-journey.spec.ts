@@ -7,6 +7,7 @@ import {
   acceptDialogs,
   approveVet,
   todayIso,
+  totpCode,
 } from './helpers';
 
 /**
@@ -222,4 +223,38 @@ test('owner revokes access and the clinic loses the pet', async () => {
 
   await vetPage.goto(`${VET_APP}/patients`);
   await expect(vetPage.getByText(petName)).toHaveCount(0);
+});
+
+test('vet turns on two-factor sign-in and signs in with a code', async () => {
+  await vetPage.goto(`${VET_APP}/profile`);
+  const card = vetPage.locator('.two-factor-card');
+  await expect(card.getByText('Off', { exact: true })).toBeVisible();
+  await card.getByRole('button', { name: 'Turn on' }).click();
+
+  const key = ((await card.locator('.two-factor-card__key').textContent()) ?? '').replace(/\s+/g, '');
+  expect(key).toMatch(/^[A-Z2-7]{32}$/);
+  await card.getByLabel('Code').fill(totpCode(key));
+  await card.getByRole('button', { name: 'Confirm and turn on' }).click();
+
+  await expect(card.getByText('Save your recovery codes')).toBeVisible();
+  const recoveryCode = ((await card.locator('.two-factor-card__code-list code').first().textContent()) ?? '').trim();
+  expect(recoveryCode).toMatch(/^[a-f0-9]{5}-[a-f0-9]{5}$/);
+  await card.getByRole('button', { name: 'I have saved them' }).click();
+  await expect(card.getByText('On', { exact: true })).toBeVisible();
+
+  // Sign out and back in: the password alone is no longer enough.
+  await vetPage.evaluate(() => localStorage.removeItem('pethealth.vet.accessToken'));
+  await vetPage.goto(`${VET_APP}/login`);
+  await vetPage.getByLabel('Email').fill(vetEmail);
+  await vetPage.getByLabel('Password').fill(PASSWORD);
+  await vetPage.getByRole('button', { name: 'Sign in' }).click();
+  await expect(vetPage.getByRole('heading', { name: 'Enter your verification code' })).toBeVisible();
+
+  await vetPage.getByLabel('Code').fill('000000');
+  await vetPage.getByRole('button', { name: 'Sign in' }).click();
+  await expect(vetPage.getByText('That code is not valid', { exact: false })).toBeVisible();
+
+  await vetPage.getByLabel('Code').fill(recoveryCode);
+  await vetPage.getByRole('button', { name: 'Sign in' }).click();
+  await expect(vetPage).toHaveURL(/\/dashboard$/);
 });

@@ -14,7 +14,9 @@ import {
 
 export function LoginPage() {
   const { t } = useTranslation();
-  const { login } = useAuth();
+  const { login, verifyTwoFactor } = useAuth();
+  const [twoFactorToken, setTwoFactorToken] = useState<string | null>(null);
+  const [code, setCode] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fieldErrors, setFieldErrors] = useState<FieldErrors<LoginField>>({});
@@ -33,16 +35,82 @@ export function LoginPage() {
 
     setIsSubmitting(true);
     try {
-      await login({
+      const result = await login({
         email: email.trim().toLowerCase(),
         password,
       });
+      if (result.status === 'two-factor-required') {
+        setTwoFactorToken(result.twoFactorToken);
+      }
     } catch (error) {
       setFormError(getAuthErrorMessage(error, 'auth'));
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  const handleCodeSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!twoFactorToken) {
+      return;
+    }
+    setFormError(null);
+    if (code.trim().length < 6) {
+      setFormError(t('twoFactor.codeRequired'));
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      await verifyTwoFactor(twoFactorToken, code.trim());
+    } catch (error) {
+      setFormError(getAuthErrorMessage(error, 'auth'));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (twoFactorToken) {
+    return (
+      <AuthShell title={t('twoFactor.loginTitle')} subtitle={t('twoFactor.loginSubtitle')}>
+        <form className="auth-form" onSubmit={handleCodeSubmit} noValidate>
+          {formError ? (
+            <p className="auth-alert" role="alert">
+              {formError}
+            </p>
+          ) : null}
+          <AuthFormField
+            id="login-two-factor-code"
+            name="code"
+            label={t('twoFactor.codeLabel')}
+            autoComplete="one-time-code"
+            inputMode="text"
+            autoFocus
+            value={code}
+            onChange={(event) => setCode(event.target.value)}
+            disabled={isSubmitting}
+          />
+          <p className="auth-card__subtitle">{t('twoFactor.recoveryHint')}</p>
+          <button className="auth-submit" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? t('auth.signingIn') : t('twoFactor.verify')}
+          </button>
+        </form>
+        <p className="auth-switch">
+          <button
+            type="button"
+            className="auth-switch__button"
+            onClick={() => {
+              setTwoFactorToken(null);
+              setCode('');
+              setPassword('');
+              setFormError(null);
+            }}
+          >
+            {t('twoFactor.startOver')}
+          </button>
+        </p>
+      </AuthShell>
+    );
+  }
 
   return (
     <AuthShell

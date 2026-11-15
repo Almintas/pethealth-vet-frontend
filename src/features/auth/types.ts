@@ -12,13 +12,21 @@ export type AuthUser = {
   email: string;
   role: string;
   approvalStatus: AccountApprovalStatus;
+  twoFactorEnabled: boolean;
   veterinarianProfile?: VeterinarianProfile | null;
 };
 
 export type AuthPayload = {
-  accessToken: string;
-  user: AuthUser;
+  accessToken: string | null;
+  user: AuthUser | null;
+  twoFactorRequired?: boolean;
+  twoFactorToken?: string | null;
 };
+
+/** Login either signs in, or asks for an authenticator code first. */
+export type LoginResult =
+  | { status: 'signed-in'; user: AuthUser }
+  | { status: 'two-factor-required'; twoFactorToken: string };
 
 export type RegisterWithInvitationInput = {
   token: string;

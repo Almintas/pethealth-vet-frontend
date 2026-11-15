@@ -12,6 +12,7 @@ import type { AuthContextValue } from './AuthContext.types';
 import type {
   AuthUser,
   LoginInput,
+  LoginResult,
   RegisterVeterinarianInput,
   RegisterWithInvitationInput,
 } from './types';
@@ -44,12 +45,34 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [client]);
 
   const login = useCallback(
-    async (input: LoginInput) => {
-      const authenticatedUser = await authService.login(client, input);
+    async (input: LoginInput): Promise<LoginResult> => {
+      const result = await authService.login(client, input);
+      if (result.status === 'signed-in') {
+        setUser(result.user);
+      }
+      return result;
+    },
+    [client],
+  );
+
+  const verifyTwoFactor = useCallback(
+    async (twoFactorToken: string, code: string) => {
+      const authenticatedUser = await authService.verifyTwoFactorLogin(
+        client,
+        twoFactorToken,
+        code,
+      );
       setUser(authenticatedUser);
     },
     [client],
   );
+
+  const refreshUser = useCallback(async () => {
+    const currentUser = await authService.fetchCurrentUser(client);
+    if (currentUser) {
+      setUser(currentUser);
+    }
+  }, [client]);
 
   const register = useCallback(
     async (input: RegisterVeterinarianInput) => {
@@ -84,12 +107,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
       isAuthenticated: user !== null,
       isInitializing,
       login,
+      verifyTwoFactor,
+      refreshUser,
       register,
       registerWithInvitation,
       logout,
       getAccessToken: authService.getAccessToken,
     }),
-    [user, isInitializing, login, register, registerWithInvitation, logout],
+    [
+      user,
+      isInitializing,
+      login,
+      verifyTwoFactor,
+      refreshUser,
+      register,
+      registerWithInvitation,
+      logout,
+    ],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

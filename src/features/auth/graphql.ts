@@ -15,6 +15,7 @@ export const AUTH_USER_FIELDS = gql`
     email
     role
     approvalStatus
+    twoFactorEnabled
     veterinarianProfile {
       ...VeterinarianProfileFields
     }
@@ -26,6 +27,8 @@ export const LOGIN_MUTATION = gql`
   mutation Login($input: LoginInput!) {
     login(input: $input) {
       accessToken
+      twoFactorRequired
+      twoFactorToken
       user {
         ...AuthUserFields
       }
@@ -60,5 +63,36 @@ export const REGISTER_WITH_INVITATION_MUTATION = gql`
     registerWithInvitation(input: $input) {
       accessToken
     }
+  }
+`;
+
+export const VERIFY_TWO_FACTOR_LOGIN_MUTATION = gql`
+  mutation VerifyTwoFactorLogin($input: VerifyTwoFactorLoginInput!) {
+    verifyTwoFactorLogin(input: $input) {
+      accessToken
+    }
+  }
+`;
+
+export const START_TWO_FACTOR_SETUP_MUTATION = gql`
+  mutation StartTwoFactorSetup {
+    startTwoFactorSetup {
+      secret
+      otpauthUrl
+    }
+  }
+`;
+
+export const CONFIRM_TWO_FACTOR_SETUP_MUTATION = gql`
+  mutation ConfirmTwoFactorSetup($code: String!) {
+    confirmTwoFactorSetup(code: $code) {
+      recoveryCodes
+    }
+  }
+`;
+
+export const DISABLE_TWO_FACTOR_MUTATION = gql`
+  mutation DisableTwoFactor($code: String!) {
+    disableTwoFactor(code: $code)
   }
 `;
