@@ -7,6 +7,7 @@ export const CLINIC_FIELDS = gql`
     email
     phone
     address
+    myRole
     createdAt
     updatedAt
   }

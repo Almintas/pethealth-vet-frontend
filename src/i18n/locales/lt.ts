@@ -289,6 +289,71 @@ const lt = {
       RECEPTIONIST: 'Registratūra',
       PLATFORM_ADMIN: 'PetHealth administratorius',
     },
+    memberRoles: {
+      ADMIN: 'Klinikos administratorius',
+      VETERINARIAN: 'Veterinaras',
+      RECEPTIONIST: 'Registratūra',
+    },
+  },
+  clinicTeam: {
+    title: 'Komanda',
+    introAdmin: 'Pakvieskite kolegas el. paštu. Kiekvienas mato tik šios klinikos pacientus.',
+    introMember: 'Šios klinikos darbuotojai. Narius kviečia klinikos administratorius.',
+    you: 'jūs',
+    awaitingApproval: 'laukia PetHealth patvirtinimo',
+    remove: 'Pašalinti',
+    removeConfirm: 'Pašalinti {{name}} iš klinikos „{{clinic}}“? Jis nebematys klinikos pacientų.',
+    inviteTitle: 'Pakviesti į komandą',
+    role: 'Rolė',
+    invite: 'Siųsti kvietimą',
+    inviting: 'Siunčiama…',
+    roleHints: {
+      VETERINARIAN:
+        'Veterinaras pildo įrašus. Jam reikės licencijos numerio ir PetHealth patvirtinimo.',
+      RECEPTIONIST:
+        'Registratūra tvarko pacientus ir vizitus. Patvirtinama iškart, licencijos nereikia.',
+      ADMIN:
+        'Administratorius gali kviesti ir šalinti narius. Jam taip pat reikės licencijos ir PetHealth patvirtinimo.',
+    },
+    inviteSent: 'Kvietimas išsiųstas adresu {{email}}. Nuoroda galioja 7 dienas.',
+    inviteNotEmailed:
+      'Kvietimas sukurtas, bet el. laiškas neišsiųstas. Nusiųskite šią nuorodą asmeniui {{email}} patys.',
+    inviteLink: 'Kvietimo nuoroda',
+    copyLink: 'Kopijuoti nuorodą',
+    copied: 'Nukopijuota',
+    pendingTitle: 'Laukiantys kvietimai',
+    expires: 'galioja iki {{date}}',
+    cancelInvite: 'Atšaukti kvietimą',
+    errors: {
+      wrongEmail:
+        'Šis kvietimas skirtas kitam el. pašto adresui. Prisijunkite tuo adresu, kad jį priimtumėte.',
+      alreadyMember: 'Šis žmogus jau yra klinikos narys.',
+      lastAdmin:
+        'Klinikoje turi likti bent vienas administratorius. Pirmiausia pakvieskite kitą administratorių.',
+      adminOnly: 'Komandą tvarkyti gali tik klinikos administratorius.',
+    },
+  },
+  invite: {
+    title: 'Kvietimas prisijungti prie klinikos',
+    subtitle: '{{clinic}} kviečia jus prisijungti kaip {{role}} ({{email}}).',
+    accept: 'Prisijungti prie klinikos',
+    accepting: 'Jungiamasi…',
+    signInToAccept: 'Šiuo el. paštu jau turite paskyrą. Prisijunkite, kad priimtumėte kvietimą.',
+    createAccount: 'Susikurkite paskyrą adresui {{email}}.',
+    createAndJoin: 'Sukurti paskyrą ir prisijungti',
+    licenceNote:
+      'Su pacientais galėsite dirbti, kai PetHealth patikrins jūsų licencijos numerį.',
+    wrongAccount:
+      'Esate prisijungę kaip {{current}}, o kvietimas skirtas {{invited}}. Atsijunkite ir tęskite su kvietime nurodytu el. paštu.',
+    signOutAndContinue: 'Atsijungti ir tęsti',
+    unavailableTitle: 'Kvietimas negalioja',
+    states: {
+      EXPIRED:
+        'Ši kvietimo nuoroda nebegalioja. Paprašykite klinikos atsiųsti naują kvietimą.',
+      USED: 'Šis kvietimas jau panaudotas. Prisijunkite prie savo paskyros.',
+      REVOKED: 'Klinika atšaukė šį kvietimą.',
+      VALID: 'Kvietimas galioja.',
+    },
   },
   admin: {
     eyebrow: 'Administravimas',

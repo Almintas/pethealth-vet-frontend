@@ -1,3 +1,5 @@
+export type ClinicMemberRole = 'ADMIN' | 'VETERINARIAN' | 'RECEPTIONIST';
+
 export type Clinic = {
   id: string;
   name: string;
@@ -6,6 +8,7 @@ export type Clinic = {
   address?: string | null;
   createdAt: string;
   updatedAt: string;
+  myRole?: ClinicMemberRole | null;
 };
 
 export type MyClinicsQueryResult = {

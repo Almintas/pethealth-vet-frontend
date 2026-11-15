@@ -6,6 +6,7 @@ import { ErrorAlert } from '../../../components/feedback/ErrorAlert';
 import { LoadingState } from '../../../components/feedback/LoadingState';
 import { useAuth } from '../../auth';
 import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
+import { ClinicTeamSection } from '../../clinic-team/components/ClinicTeamSection';
 import { CreateClinicDialog } from '../components/CreateClinicDialog';
 import { MyClinicInfoCard } from '../components/MyClinicInfoCard';
 import { MY_CLINICS_QUERY } from '../graphql';
@@ -76,7 +77,10 @@ export function ClinicsPage() {
       ) : null}
 
       {clinics.length === 1 && singleClinic ? (
-        <MyClinicInfoCard clinic={singleClinic} user={user} />
+        <>
+          <MyClinicInfoCard clinic={singleClinic} user={user} />
+          <ClinicTeamSection clinic={singleClinic} />
+        </>
       ) : null}
 
       {clinics.length > 1 ? (
@@ -85,6 +89,7 @@ export function ClinicsPage() {
             <section key={clinic.id}>
               <h2 className="my-clinic-list__item-title">{clinic.name}</h2>
               <MyClinicInfoCard clinic={clinic} user={user} />
+              <ClinicTeamSection clinic={clinic} />
             </section>
           ))}
         </div>

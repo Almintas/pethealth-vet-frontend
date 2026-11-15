@@ -54,3 +54,11 @@ export const ME_QUERY = gql`
   }
   ${AUTH_USER_FIELDS}
 `;
+
+export const REGISTER_WITH_INVITATION_MUTATION = gql`
+  mutation RegisterWithInvitation($input: RegisterWithInvitationInput!) {
+    registerWithInvitation(input: $input) {
+      accessToken
+    }
+  }
+`;

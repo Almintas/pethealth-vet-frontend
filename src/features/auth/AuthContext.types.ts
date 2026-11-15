@@ -1,4 +1,9 @@
-import type { AuthUser, LoginInput, RegisterVeterinarianInput } from './types';
+import type {
+  AuthUser,
+  LoginInput,
+  RegisterVeterinarianInput,
+  RegisterWithInvitationInput,
+} from './types';
 
 export type AuthContextValue = {
   user: AuthUser | null;
@@ -6,6 +11,7 @@ export type AuthContextValue = {
   isInitializing: boolean;
   login: (input: LoginInput) => Promise<void>;
   register: (input: RegisterVeterinarianInput) => Promise<void>;
+  registerWithInvitation: (input: RegisterWithInvitationInput) => Promise<void>;
   logout: () => Promise<void>;
   getAccessToken: () => string | null;
 };

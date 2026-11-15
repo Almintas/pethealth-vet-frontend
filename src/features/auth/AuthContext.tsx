@@ -9,7 +9,12 @@ import {
 import * as authService from './auth.service';
 import { AuthContext } from './auth-context';
 import type { AuthContextValue } from './AuthContext.types';
-import type { AuthUser, LoginInput, RegisterVeterinarianInput } from './types';
+import type {
+  AuthUser,
+  LoginInput,
+  RegisterVeterinarianInput,
+  RegisterWithInvitationInput,
+} from './types';
 
 type AuthProviderProps = {
   children: ReactNode;
@@ -57,6 +62,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
     [client],
   );
 
+  const registerWithInvitation = useCallback(
+    async (input: RegisterWithInvitationInput) => {
+      const authenticatedUser = await authService.registerWithInvitation(
+        client,
+        input,
+      );
+      setUser(authenticatedUser);
+    },
+    [client],
+  );
+
   const logout = useCallback(async () => {
     await authService.logout(client);
     setUser(null);
@@ -69,10 +85,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
       isInitializing,
       login,
       register,
+      registerWithInvitation,
       logout,
       getAccessToken: authService.getAccessToken,
     }),
-    [user, isInitializing, login, register, logout],
+    [user, isInitializing, login, register, registerWithInvitation, logout],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

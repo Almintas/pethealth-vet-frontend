@@ -33,4 +33,22 @@ describe('getUserFacingErrorMessage', () => {
       getUserFacingErrorMessage(graphQLError('Unauthorized', 'UNAUTHENTICATED')),
     ).toBe(t('errors.sessionExpired'));
   });
+
+  it.each([
+    [
+      'This invitation link is invalid or has expired. Ask the clinic to send a new one.',
+      'invite.states.EXPIRED',
+    ],
+    [
+      'This invitation was sent to a different email address. Sign in with that email to accept it.',
+      'clinicTeam.errors.wrongEmail',
+    ],
+    ['This person is already a member of the clinic.', 'clinicTeam.errors.alreadyMember'],
+    [
+      'A clinic needs at least one administrator. Invite another administrator first.',
+      'clinicTeam.errors.lastAdmin',
+    ],
+  ])('translates the team error "%s"', (message, key) => {
+    expect(getUserFacingErrorMessage(graphQLError(message, 'BAD_REQUEST'))).toBe(t(key));
+  });
 });
