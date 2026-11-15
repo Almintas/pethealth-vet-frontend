@@ -54,7 +54,7 @@ test('vet registers and waits for approval', async () => {
   await vetPage.getByRole('button', { name: 'Create account' }).click();
 
   await expect(vetPage.getByRole('heading', { name: 'Account awaiting approval' })).toBeVisible();
-  await expect(vetPage.getByText(`VET-${RUN}`)).toBeVisible();
+  await expect(vetPage.getByText(`VET-${RUN}`, { exact: true })).toBeVisible();
 });
 
 test('approved vet creates a clinic from the dashboard prompt', async () => {
@@ -164,7 +164,7 @@ test('clinic admin invites a receptionist who joins from the link', async ({ bro
   const link = team.getByLabel('Invitation link');
   await expect(link).toHaveValue(/\/invite\?token=/);
   inviteUrl = await link.inputValue();
-  await expect(team.getByText(deskEmail)).toBeVisible();
+  await expect(team.getByText(deskEmail, { exact: true }).first()).toBeVisible();
 
   const deskPage = await newPage(browser);
   try {
