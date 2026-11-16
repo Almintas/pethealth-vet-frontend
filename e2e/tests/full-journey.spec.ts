@@ -22,6 +22,7 @@ const ownerEmail = `owner-${RUN}@e2e.test`;
 const deskEmail = `desk-${RUN}@e2e.test`;
 const clinicName = `E2E Clinic ${RUN}`;
 const petName = `Luna ${RUN.slice(-4)}`;
+const labResultPdf = Buffer.from(`%PDF-1.4\n% lab result ${RUN}\n%%EOF\n`);
 
 let vetPage: Page;
 let ownerPage: Page;
@@ -163,6 +164,30 @@ test('vet records a vaccination', async () => {
   await expect(vetPage.getByText('Rabies').first()).toBeVisible();
 });
 
+test('vet attaches a lab result to a medical record', async () => {
+  await vetPage.getByRole('button', { name: '+ Add medical record' }).first().click();
+  const form = vetPage.getByRole('dialog', { name: 'Add medical record' });
+  await form.getByLabel(/Title \/ reason/).fill('Blood test');
+  await form.getByRole('button', { name: 'Add medical record' }).click();
+  await expect(form).toBeHidden();
+
+  await vetPage
+    .locator('.medical-history__item', { hasText: 'Blood test' })
+    .first()
+    .getByRole('button', { name: /View record/ })
+    .click();
+  const dialog = vetPage.getByRole('dialog');
+  await dialog.getByLabel('Attach file').setInputFiles({
+    name: 'Kraujo tyrimas.pdf',
+    mimeType: 'application/pdf',
+    buffer: labResultPdf,
+  });
+  await expect(dialog.getByText('Kraujo tyrimas.pdf')).toBeVisible();
+  await expect(dialog.getByRole('button', { name: 'Remove: Kraujo tyrimas.pdf' })).toBeVisible();
+  await dialog.getByRole('button', { name: 'Close' }).last().click();
+  await expect(dialog).toBeHidden();
+});
+
 test('owner sees the vaccination, the clinic and the activity log', async () => {
   await ownerPage.goto(`${OWNER_APP}${petPath}`);
   await expect(ownerPage.getByText('Rabies').first()).toBeVisible();
@@ -173,6 +198,7 @@ test('owner sees the vaccination, the clinic and the activity log', async () => 
   const activity = ownerPage.locator('#pet-activity');
   await expect(activity.getByText('got access with your code')).toBeVisible();
   await expect(activity.getByText('recorded a vaccination')).toBeVisible();
+  await expect(activity.getByText('attached a file to a medical record')).toBeVisible();
   await expect(activity.getByText(`Ona Vet · ${clinicName}`).first()).toBeVisible();
 });
 
@@ -191,6 +217,15 @@ test('owner downloads the health passport as a PDF', async () => {
   const shown = (text: string) => `<${Buffer.from(text, 'latin1').toString('hex')}>`;
   expect(pdf).toContain(shown(petName));
   expect(pdf).toContain(shown('Rabies'));
+});
+
+test('owner downloads the file the clinic attached', async () => {
+  await expect(ownerPage.getByText('Blood test').first()).toBeVisible();
+  const downloadPromise = ownerPage.waitForEvent('download');
+  await ownerPage.getByRole('button', { name: 'Download Kraujo tyrimas.pdf' }).click();
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toBe('Kraujo tyrimas.pdf');
+  expect(readFileSync(await download.path()).equals(labResultPdf)).toBe(true);
 });
 
 test('clinic admin invites a receptionist who joins from the link', async ({ browser }) => {
