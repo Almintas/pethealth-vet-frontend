@@ -1,0 +1,104 @@
+.owner-reminders__intro,
+.owner-reminders__empty {
+  margin: var(--ph-space-2, 0.5rem) 0 0;
+  font-size: 0.875rem;
+  color: var(--ph-color-text-muted);
+}
+
+.owner-reminders__form {
+  display: grid;
+  gap: var(--ph-space-3, 0.75rem);
+  margin-top: var(--ph-space-4, 1rem);
+  padding: var(--ph-space-4, 1rem);
+  border: 1px solid var(--ph-color-border);
+  border-radius: var(--ph-radius-md, 0.625rem);
+  background: var(--ph-color-surface-muted, transparent);
+}
+
+.owner-reminders__row {
+  display: grid;
+  gap: var(--ph-space-3, 0.75rem);
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+}
+
+.owner-reminders__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--ph-space-2, 0.5rem);
+}
+
+.owner-reminders__error {
+  margin: var(--ph-space-3, 0.75rem) 0 0;
+  padding: var(--ph-space-2, 0.5rem) var(--ph-space-3, 0.75rem);
+  border-radius: var(--ph-radius-md, 0.625rem);
+  background: var(--ph-color-danger-soft);
+  color: var(--ph-color-danger-text, var(--ph-color-danger));
+  font-size: 0.875rem;
+}
+
+.owner-reminders__list {
+  display: grid;
+  gap: var(--ph-space-2, 0.5rem);
+  margin: var(--ph-space-4, 1rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.owner-reminders__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ph-space-3, 0.75rem);
+  padding: var(--ph-space-3, 0.75rem) var(--ph-space-4, 1rem);
+  border: 1px solid var(--ph-color-border);
+  border-radius: var(--ph-radius-md, 0.625rem);
+  background: var(--ph-color-surface);
+}
+
+.owner-reminders__main {
+  min-width: 0;
+}
+
+.owner-reminders__title {
+  margin: 0;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.owner-reminders__meta,
+.owner-reminders__message {
+  margin: var(--ph-space-1, 0.25rem) 0 0;
+  font-size: 0.8125rem;
+  color: var(--ph-color-text-muted);
+}
+
+.owner-reminders__message {
+  white-space: pre-wrap;
+}
+
+.owner-reminders__side {
+  display: flex;
+  align-items: center;
+  gap: var(--ph-space-2, 0.5rem);
+}
+
+.owner-reminders__status {
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: var(--ph-color-surface-muted, #f1f5f9);
+  color: var(--ph-color-text-muted);
+}
+
+.owner-reminders__status--pending {
+  background: var(--ph-color-primary-soft, #eff6ff);
+  color: var(--ph-color-primary, #2563eb);
+}
+
+.owner-reminders__remove {
+  color: var(--ph-color-danger-text, var(--ph-color-danger));
+}

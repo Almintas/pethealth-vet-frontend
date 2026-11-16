@@ -9,6 +9,7 @@ import { MedicalHistorySection } from '../../medical-records/components/MedicalH
 import { MedicationsSection } from '../../medications/components/MedicationsSection';
 import { AppointmentsSection } from '../../appointments/components/AppointmentsSection';
 import { VaccinationsSection } from '../../vaccinations/components/VaccinationsSection';
+import { OwnerRemindersSection } from '../../reminders/components/OwnerRemindersSection';
 import { PatientClinicalSummary } from '../components/PatientClinicalSummary';
 import { MY_CLINICS_QUERY } from '../../clinics/graphql';
 import type { MyClinicsQueryResult } from '../../clinics/types';
@@ -143,6 +144,8 @@ export function PatientProfilePage() {
               <MedicationsSection patient={patient} clinics={clinics} />
 
               <VaccinationsSection patient={patient} clinics={clinics} />
+
+              <OwnerRemindersSection patient={patient} clinics={clinics} />
 
               <AppointmentsSection patient={patient} />
             </div>
