@@ -8,6 +8,17 @@ export type VetMedicalRecordPatient = {
   ownerEmail?: string | null;
 };
 
+export type VetMedicalRecordAttachment = {
+  id: string;
+  fileName: string;
+  contentType: string;
+  size: number;
+  clinicId?: string | null;
+  clinicName?: string | null;
+  uploadedByName?: string | null;
+  createdAt: string;
+};
+
 export type VetMedicalRecord = {
   id: string;
   petId: string;
@@ -19,6 +30,7 @@ export type VetMedicalRecord = {
   veterinarianName?: string | null;
   clinicName?: string | null;
   notes?: string | null;
+  attachments?: VetMedicalRecordAttachment[];
   patient: VetMedicalRecordPatient;
 };
 

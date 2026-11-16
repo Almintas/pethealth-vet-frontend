@@ -7,21 +7,27 @@ import {
   getMedicalRecordTypeKey,
 } from '../utils/medical-record-display';
 import type { VetMedicalRecord } from '../types';
+import { MedicalRecordAttachments } from './MedicalRecordAttachments';
 import '../../patients/components/patient-form-dialog.css';
 import '../../patients/components/patient-profile.css';
 
 type MedicalRecordDetailDialogProps = {
   record: VetMedicalRecord | null;
   patient: Patient;
+  clinics: { id: string; name: string }[];
   onClose: () => void;
   onEdit: (record: VetMedicalRecord) => void;
+  /** Called after files were added or removed. */
+  onAttachmentsChanged?: () => void;
 };
 
 export function MedicalRecordDetailDialog({
   record,
   patient,
+  clinics,
   onClose,
   onEdit,
+  onAttachmentsChanged,
 }: MedicalRecordDetailDialogProps) {
   const { t, i18n } = useTranslation();
 
@@ -111,6 +117,14 @@ export function MedicalRecordDetailDialog({
             </div>
           ) : null}
         </dl>
+
+        <MedicalRecordAttachments
+          key={record.id}
+          record={record}
+          patient={patient}
+          clinics={clinics}
+          onChanged={onAttachmentsChanged}
+        />
 
         <div className="patient-form-dialog__actions">
           <button

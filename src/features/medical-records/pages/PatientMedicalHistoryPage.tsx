@@ -297,6 +297,8 @@ export function PatientMedicalHistoryPage() {
             setSelectedRecord(null);
             setEditRecord(record);
           }}
+          clinics={clinics}
+          onAttachmentsChanged={() => void refetch()}
         />
       ) : null}
     </div>

@@ -141,6 +141,8 @@ export function MedicalHistorySection({
             setSelectedRecord(null);
             setEditRecord(record);
           }}
+          clinics={clinics}
+          onAttachmentsChanged={() => void refetch()}
         />
     </section>
   );
