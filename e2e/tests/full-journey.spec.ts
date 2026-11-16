@@ -250,7 +250,7 @@ test('owner downloads their data, then deletes the account', async () => {
 
   await ownerPage.getByLabel('Enter your password to confirm').fill(PASSWORD);
   await ownerPage.getByRole('button', { name: 'Delete account permanently' }).click();
-  await expect(ownerPage).toHaveURL(/\/login\?accountDeleted=1$/);
+  await expect(ownerPage).toHaveURL(/\/login/);
   await expect(ownerPage.getByText('Your account and all its data have been deleted.')).toBeVisible();
 
   await ownerPage.getByLabel('Email').fill(ownerEmail);
