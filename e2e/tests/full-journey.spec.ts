@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { expect, test, type Browser, type Page } from '@playwright/test';
 import {
   OWNER_APP,
@@ -223,6 +224,39 @@ test('owner revokes access and the clinic loses the pet', async () => {
 
   await vetPage.goto(`${VET_APP}/patients`);
   await expect(vetPage.getByText(petName)).toHaveCount(0);
+});
+
+test('owner downloads their data, then deletes the account', async () => {
+  await ownerPage.goto(`${OWNER_APP}/settings`);
+
+  const downloadPromise = ownerPage.waitForEvent('download');
+  await ownerPage.getByRole('button', { name: 'Download my data' }).click();
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toMatch(/^pethealth-data-\d{4}-\d{2}-\d{2}\.json$/);
+  const path = await download.path();
+  const exported = JSON.parse(readFileSync(path, 'utf8')) as {
+    account: { email: string };
+    pets: { name: string; vaccinations: { vaccineName: string }[] }[];
+  };
+  expect(exported.account.email).toBe(ownerEmail);
+  const pet = exported.pets.find((entry) => entry.name === petName);
+  expect(pet?.vaccinations.map((v) => v.vaccineName)).toContain('Rabies');
+
+  await ownerPage.getByRole('button', { name: 'Delete account' }).click();
+  await ownerPage.getByLabel('Enter your password to confirm').fill('wrong-password-1');
+  await ownerPage.getByLabel(/I understand my account/).check();
+  await ownerPage.getByRole('button', { name: 'Delete account permanently' }).click();
+  await expect(ownerPage.getByText('The password is not correct.')).toBeVisible();
+
+  await ownerPage.getByLabel('Enter your password to confirm').fill(PASSWORD);
+  await ownerPage.getByRole('button', { name: 'Delete account permanently' }).click();
+  await expect(ownerPage).toHaveURL(/\/login\?accountDeleted=1$/);
+  await expect(ownerPage.getByText('Your account and all its data have been deleted.')).toBeVisible();
+
+  await ownerPage.getByLabel('Email').fill(ownerEmail);
+  await ownerPage.getByLabel('Password').fill(PASSWORD);
+  await ownerPage.getByRole('button', { name: 'Sign in' }).click();
+  await expect(ownerPage.getByText('Invalid email or password.')).toBeVisible();
 });
 
 test('vet turns on two-factor sign-in and signs in with a code', async () => {
