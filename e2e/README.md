@@ -6,7 +6,8 @@ one-time code, the clinic records a vaccination and attaches a lab result to
 a medical record, sets a reminder for the owner, the owner sees them with the
 activity log, downloads the
 health passport PDF and the attached file, the clinic invites a
-receptionist, and the owner revokes access.
+receptionist, the owner revokes access, and the clinic then finds the pet by
+microchip without seeing the owner and lets the owner know.
 
 They run in CI (`.github/workflows/e2e.yml` in pethealth-vet-frontend and
 pethealth-frontend) against all four services built from `dev`. This folder

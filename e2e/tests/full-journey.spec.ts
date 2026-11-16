@@ -23,6 +23,9 @@ const ownerEmail = `owner-${RUN}@e2e.test`;
 const deskEmail = `desk-${RUN}@e2e.test`;
 const clinicName = `E2E Clinic ${RUN}`;
 const petName = `Luna ${RUN.slice(-4)}`;
+// Unique 15-digit chip per run, typed with spaces as on a pet passport.
+const chip = `440${String(Date.now()).slice(-12)}`;
+const chipTyped = `${chip.slice(0, 3)} ${chip.slice(3, 6)} ${chip.slice(6, 9)} ${chip.slice(9)}`;
 const labResultPdf = Buffer.from(`%PDF-1.4\n% lab result ${RUN}\n%%EOF\n`);
 
 let vetPage: Page;
@@ -116,6 +119,7 @@ test('owner registers and adds a pet', async () => {
   const species = ownerPage.getByRole('combobox', { name: /Species/ });
   await species.fill('Cat');
   await species.press('Tab');
+  await ownerPage.locator('input[name="microchipNumber"]').fill(chipTyped);
   await ownerPage.getByRole('button', { name: 'Create pet' }).last().click();
 
   await ownerPage.getByRole('link', { name: new RegExp(petName) }).first().click();
@@ -296,6 +300,27 @@ test('owner revokes access and the clinic loses the pet', async () => {
 
   await vetPage.goto(`${VET_APP}/patients`);
   await expect(vetPage.getByText(petName)).toHaveCount(0);
+});
+
+test('vet finds the pet by microchip and lets the owner know', async () => {
+  const panel = vetPage.locator('section[aria-labelledby="microchip-search-heading"]');
+  await panel.getByLabel('Microchip number').fill(chip);
+  await panel.getByRole('button', { name: 'Search' }).click();
+  await expect(panel.getByText(petName)).toBeVisible();
+  await expect(panel.getByRole('link', { name: 'Open patient' })).toHaveCount(0);
+  await expect(panel.getByText(ownerEmail)).toHaveCount(0);
+
+  await panel.getByLabel('Message for the owner (optional)').fill('Safe with us.');
+  await panel.getByRole('button', { name: 'Let the owner know' }).click();
+  // No email provider in CI: the clinic is told the email did not go out.
+  await expect(
+    panel.getByText(/The owner (has been emailed|could not be emailed right now)/),
+  ).toBeVisible();
+
+  await ownerPage.goto(`${OWNER_APP}${petPath}`);
+  await expect(
+    ownerPage.locator('#pet-activity').getByText('looked your pet up by its microchip'),
+  ).toBeVisible();
 });
 
 test('owner downloads their data, then deletes the account', async () => {
