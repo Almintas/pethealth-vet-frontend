@@ -534,6 +534,27 @@ const en = {
       DISMISSED: 'Dismissed',
     },
   },
+  microchip: {
+    title: 'Find a pet by microchip',
+    hint: 'For a found or new pet: your patients open directly; for other pets you see only the name and can let the owner know.',
+    number: 'Microchip number',
+    search: 'Search',
+    searching: 'Searching…',
+    invalid: 'Enter a microchip number of 9 to 15 letters or digits.',
+    tooMany: 'Too many searches. Please wait a few minutes and try again.',
+    searchFailed: 'The search did not work. Please try again.',
+    notFound: 'No pet with microchip {{microchip}} is registered in PetHealth.',
+    openPatient: 'Open patient',
+    noAccess: 'This pet is registered in PetHealth, but your clinic does not have the owner’s consent. You can let the owner know the pet is with you; they get your clinic’s contact details.',
+    message: 'Message for the owner (optional)',
+    messagePlaceholder: 'e.g. Your dog was brought in by a passer-by and is safe with us.',
+    notifyOwner: 'Let the owner know',
+    notice: {
+      sent: 'The owner has been emailed with your clinic’s contact details.',
+      notSent: 'The owner could not be emailed right now. The search is in their activity log.',
+      failed: 'The owner could not be notified. Please try again.',
+    },
+  },
   medicalRecords: {
     attachments: {
       title: 'Attachments',

@@ -541,6 +541,27 @@ const lt = {
       DISMISSED: 'Atmesta',
     },
   },
+  microchip: {
+    title: 'Rasti augintinį pagal mikroschemą',
+    hint: 'Rastam ar naujam gyvūnui: jūsų pacientai atidaromi iš karto, o kitų matysite tik vardą ir galėsite pranešti savininkui.',
+    number: 'Mikroschemos numeris',
+    search: 'Ieškoti',
+    searching: 'Ieškoma…',
+    invalid: 'Įveskite mikroschemos numerį – nuo 9 iki 15 raidžių ar skaitmenų.',
+    tooMany: 'Per daug paieškų. Palaukite kelias minutes ir bandykite dar kartą.',
+    searchFailed: 'Paieška nepavyko. Bandykite dar kartą.',
+    notFound: 'Augintinis su mikroschema {{microchip}} PetHealth sistemoje neregistruotas.',
+    openPatient: 'Atidaryti pacientą',
+    noAccess: 'Šis augintinis registruotas PetHealth, bet jūsų klinika neturi savininko sutikimo. Galite pranešti savininkui, kad augintinis pas jus – jis gaus jūsų klinikos kontaktus.',
+    message: 'Žinutė savininkui (nebūtina)',
+    messagePlaceholder: 'pvz., Jūsų šunį atvedė praeivis, jis saugus pas mus.',
+    notifyOwner: 'Pranešti savininkui',
+    notice: {
+      sent: 'Savininkui išsiųstas el. laiškas su jūsų klinikos kontaktais.',
+      notSent: 'Savininkui šiuo metu nepavyko išsiųsti laiško. Paieška matoma jo veiklos žurnale.',
+      failed: 'Savininkui pranešti nepavyko. Bandykite dar kartą.',
+    },
+  },
   medicalRecords: {
     attachments: {
       title: 'Priedai',

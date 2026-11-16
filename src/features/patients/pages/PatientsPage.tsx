@@ -9,6 +9,7 @@ import { LoadingState } from '../../../components/feedback/LoadingState';
 import { MY_CLINICS_QUERY } from '../../clinics/graphql';
 import type { MyClinicsQueryResult } from '../../clinics/types';
 import { ClaimPatientDialog } from '../components/ClaimPatientDialog';
+import { MicrochipSearchPanel } from '../../microchip/MicrochipSearchPanel';
 import { PatientCard } from '../components/PatientCard';
 import { PatientFormDialog } from '../components/PatientFormDialog';
 import { MY_PATIENTS_QUERY } from '../graphql';
@@ -123,6 +124,8 @@ export function PatientsPage() {
           </button>
         </div>
       </header>
+
+      <MicrochipSearchPanel clinics={clinics} />
 
       {!isInitialLoading && !error && patients.length > 0 ? (
         <>
