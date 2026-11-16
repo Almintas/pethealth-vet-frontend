@@ -3,7 +3,8 @@
 Playwright tests that use both PetHealth apps the way people do: a vet
 registers and is approved, creates a clinic, an owner shares a pet with a
 one-time code, the clinic records a vaccination, the owner sees it with the
-activity log, the clinic invites a receptionist, and the owner revokes access.
+activity log and downloads the health passport PDF, the clinic invites a
+receptionist, and the owner revokes access.
 
 They run in CI (`.github/workflows/e2e.yml` in pethealth-vet-frontend and
 pethealth-frontend) against all four services built from `dev`. This folder

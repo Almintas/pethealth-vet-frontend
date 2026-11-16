@@ -176,6 +176,23 @@ test('owner sees the vaccination, the clinic and the activity log', async () => 
   await expect(activity.getByText(`Ona Vet · ${clinicName}`).first()).toBeVisible();
 });
 
+test('owner downloads the health passport as a PDF', async () => {
+  const downloadPromise = ownerPage.waitForEvent('download');
+  await ownerPage.getByRole('button', { name: 'Health passport (PDF)' }).click();
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toMatch(
+    /^health-passport-luna-[a-z0-9]+-\d{4}-\d{2}-\d{2}\.pdf$/,
+  );
+
+  const pdf = readFileSync(await download.path()).toString('latin1');
+  expect(pdf.startsWith('%PDF-')).toBe(true);
+  expect(pdf.trimEnd().endsWith('%%EOF')).toBe(true);
+  // Text is drawn as hex strings of one-byte codes; ASCII keeps its code.
+  const shown = (text: string) => `<${Buffer.from(text, 'latin1').toString('hex')}>`;
+  expect(pdf).toContain(shown(petName));
+  expect(pdf).toContain(shown('Rabies'));
+});
+
 test('clinic admin invites a receptionist who joins from the link', async ({ browser }) => {
   await vetPage.goto(`${VET_APP}/clinics`);
   const team = vetPage.locator('.clinic-team');
