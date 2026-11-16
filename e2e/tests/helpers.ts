@@ -32,6 +32,14 @@ export function todayIso(): string {
   return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
 }
 
+/** Local date `days` from today as yyyy-mm-dd (for date inputs). */
+export function daysFromTodayIso(days: number): string {
+  const date = new Date();
+  date.setDate(date.getDate() + days);
+  const pad = (value: number) => String(value).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
 /** Current 6-digit TOTP code for a base32 key (RFC 6238, SHA-1, 30 s). */
 export function totpCode(base32Key: string, timeMs = Date.now()): string {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';

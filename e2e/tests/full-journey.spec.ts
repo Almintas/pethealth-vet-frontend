@@ -7,6 +7,7 @@ import {
   VET_APP,
   acceptDialogs,
   approveVet,
+  daysFromTodayIso,
   todayIso,
   totpCode,
 } from './helpers';
@@ -188,6 +189,17 @@ test('vet attaches a lab result to a medical record', async () => {
   await expect(dialog).toBeHidden();
 });
 
+test('vet sets a reminder for the owner', async () => {
+  const section = vetPage.locator('section[aria-labelledby="owner-reminders-heading"]');
+  await section.getByRole('button', { name: '+ Add reminder' }).click();
+  await section.getByLabel('Type').selectOption('APPOINTMENT');
+  await section.getByLabel('Date').fill(daysFromTodayIso(14));
+  await section.getByLabel('Reminder', { exact: true }).fill('Follow-up visit');
+  await section.getByRole('button', { name: 'Save reminder' }).click();
+  await expect(section.getByText('Follow-up visit')).toBeVisible();
+  await expect(section.getByRole('button', { name: 'Remove: Follow-up visit' })).toBeVisible();
+});
+
 test('owner sees the vaccination, the clinic and the activity log', async () => {
   await ownerPage.goto(`${OWNER_APP}${petPath}`);
   await expect(ownerPage.getByText('Rabies').first()).toBeVisible();
@@ -199,6 +211,14 @@ test('owner sees the vaccination, the clinic and the activity log', async () => 
   await expect(activity.getByText('got access with your code')).toBeVisible();
   await expect(activity.getByText('recorded a vaccination')).toBeVisible();
   await expect(activity.getByText('attached a file to a medical record')).toBeVisible();
+  await expect(activity.getByText('set a reminder for you')).toBeVisible();
+
+  const reminders = ownerPage.locator('section[aria-labelledby="reminders-title"]');
+  await expect(reminders.getByText('Follow-up visit')).toBeVisible();
+  await expect(reminders.getByText(`From ${clinicName} · Ona Vet`)).toBeVisible();
+  await expect(reminders.getByRole('button', { name: 'Complete' })).toBeVisible();
+  await expect(reminders.getByRole('button', { name: 'Edit' })).toHaveCount(0);
+  await expect(reminders.getByRole('button', { name: 'Delete' })).toHaveCount(0);
   await expect(activity.getByText(`Ona Vet · ${clinicName}`).first()).toBeVisible();
 });
 

@@ -3,7 +3,8 @@
 Playwright tests that use both PetHealth apps the way people do: a vet
 registers and is approved, creates a clinic, an owner shares a pet with a
 one-time code, the clinic records a vaccination and attaches a lab result to
-a medical record, the owner sees them with the activity log, downloads the
+a medical record, sets a reminder for the owner, the owner sees them with the
+activity log, downloads the
 health passport PDF and the attached file, the clinic invites a
 receptionist, and the owner revokes access.
 
